@@ -13,10 +13,12 @@ import { getDMMF, type DMMF } from '@zenstackhq/sdk/prisma';
 import { execSync } from 'child_process';
 import * as fs from 'fs';
 import json from 'json5';
+import { fileURLToPath } from 'node:url';
 import * as path from 'path';
 import tmp from 'tmp';
 import { loadDocument } from 'zenstack/cli/cli-util';
 import prismaPlugin from 'zenstack/plugins/prisma';
+import { $require } from './utils';
 
 /** 
  * Use it to represent multiple files in a single string like this
@@ -165,7 +167,8 @@ export async function loadSchema(schema: string, options?: SchemaLoadOptions) {
         projectDir = r.name;
     }
 
-    const workspaceRoot = getWorkspaceRoot(__dirname);
+    const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+    const workspaceRoot = getWorkspaceRoot(_dirname);
 
     if (!workspaceRoot) {
         throw new Error('Could not find workspace root');
@@ -179,11 +182,12 @@ export async function loadSchema(schema: string, options?: SchemaLoadOptions) {
 
     // install local deps
     const localInstallDeps = [
-        'packages/schema/dist',
-        'packages/runtime/dist',
-        'packages/plugins/swr/dist',
-        'packages/plugins/trpc/dist',
-        'packages/plugins/openapi/dist',
+        'packages/schema',
+        'packages/runtime',
+        'packages/plugins/swr',
+        'packages/plugins/tanstack-query',
+        'packages/plugins/trpc',
+        'packages/plugins/openapi',
     ];
 
     run(`npm i --no-audit --no-fund ${localInstallDeps.map((d) => path.join(workspaceRoot, d)).join(' ')}`);
@@ -269,7 +273,7 @@ export async function loadSchema(schema: string, options?: SchemaLoadOptions) {
             ? options.prismaLoadPath
             : path.join(projectDir, options.prismaLoadPath)
         : path.join(projectDir, 'node_modules/.prisma/client');
-    const prismaModule = require(prismaLoadPath);
+    const prismaModule = await $require(prismaLoadPath);
     const PrismaClient = prismaModule.PrismaClient;
 
     let clientOptions: object = { log: ['info', 'warn', 'error'] };
@@ -301,10 +305,12 @@ export async function loadSchema(schema: string, options?: SchemaLoadOptions) {
         // add generated '.zenstack/zod' folder to typescript's search path,
         // so that it can be resolved from symbolic-linked files
         const tsconfig = json.parse(fs.readFileSync(path.join(projectDir, './tsconfig.json'), 'utf-8'));
-        tsconfig.compilerOptions.paths = {
-            '.zenstack/zod/input': ['./node_modules/.zenstack/zod/input/index.d.ts'],
-            '.zenstack/models': ['./node_modules/.zenstack/models.d.ts'],
-        };
+        // tsconfig.compilerOptions.paths = {
+        //     '.zenstack/zod/input': ['./node_modules/.zenstack/zod/input/index.d.ts'],
+        //     '.zenstack/models': ['./node_modules/.zenstack/models.d.ts'],
+        // };
+        tsconfig.compilerOptions.module = 'esnext';
+        tsconfig.compilerOptions.moduleResolution = 'bundler';
         tsconfig.include = ['**/*.ts'];
         tsconfig.exclude = ['node_modules'];
         fs.writeFileSync(path.join(projectDir, './tsconfig.json'), JSON.stringify(tsconfig, null, 2));
@@ -330,17 +336,17 @@ export async function loadSchema(schema: string, options?: SchemaLoadOptions) {
             : path.join(projectDir, opt.output)
         : path.join(projectDir, 'node_modules', DEFAULT_RUNTIME_LOAD_PATH);
 
-    const policy: PolicyDef = require(path.join(outputPath, 'policy')).default;
-    const modelMeta = require(path.join(outputPath, 'model-meta')).default;
+    const policy: PolicyDef = await $require(path.join(outputPath, 'policy'));
+    const modelMeta = await $require(path.join(outputPath, 'model-meta'));
 
     let zodSchemas: any;
     try {
-        zodSchemas = require(path.join(outputPath, 'zod'));
+        zodSchemas = await $require(path.join(outputPath, 'zod'));
     } catch {
         /* noop */
     }
 
-    const enhance = require(path.join(outputPath, 'enhance')).enhance;
+    const enhance = (await $require(path.join(outputPath, 'enhance'))).enhance;
 
     return {
         projectDir: projectDir,

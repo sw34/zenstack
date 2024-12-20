@@ -1,7 +1,7 @@
 import { DefaultDefinitionProvider, LangiumDocuments, LangiumServices, LeafCstNode, MaybePromise } from 'langium';
 import { DefinitionParams, LocationLink, Range } from 'vscode-languageserver';
 import { resolveImport } from '../utils/ast-utils';
-import { isModelImport } from '@zenstackhq/language/ast';
+import { isModelImport } from '@zenstackhq/sdk/ast';
 
 export class ZModelDefinitionProvider extends DefaultDefinitionProvider {
     protected documents: LangiumDocuments;

@@ -9,7 +9,7 @@ import {
     Model,
     TypeDef,
     ZModelAstType,
-} from '@zenstackhq/language/ast';
+} from '@zenstackhq/sdk/ast';
 import { AstNode, LangiumDocument, ValidationAcceptor, ValidationChecks, ValidationRegistry } from 'langium';
 import type { ZModelServices } from '../zmodel-module';
 import AttributeValidator from './attribute-validator';

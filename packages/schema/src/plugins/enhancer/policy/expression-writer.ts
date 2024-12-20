@@ -18,7 +18,7 @@ import {
     ReferenceTarget,
     StringLiteral,
     UnaryExpr,
-} from '@zenstackhq/language/ast';
+} from '@zenstackhq/sdk/ast';
 import { DELEGATE_AUX_RELATION_PREFIX, PolicyOperationKind } from '@zenstackhq/runtime';
 import {
     ExpressionContext,

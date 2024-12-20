@@ -7,6 +7,7 @@
     "author": {
         "name": "ZenStack Team"
     },
+    "files": ["dist", "bin", "bundle", "res", "scripts"],
     "homepage": "https://zenstack.dev",
     "license": "MIT",
     "keywords": [
@@ -21,10 +22,6 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/zenstackhq/zenstack"
-    },
-    "publishConfig": {
-        "directory": "dist",
-        "linkDirectory": true
     },
     "engines": {
         "vscode": "^1.63.0"
@@ -80,14 +77,87 @@
         "vscode:prerelease": "vsce publish --no-dependencies --pre-release",
         "vscode:prepublish": "pnpm bundle",
         "vscode:package": "pnpm bundle && vsce package --no-dependencies",
-        "clean": "rimraf dist",
-        "build": "pnpm clean && pnpm lint --max-warnings=0 && tsc && copyfiles -F \"bin/*\" dist && copyfiles ./README-global.md ./LICENSE ./package.json dist && renamer --replace \"README.md\" dist/README-global.md && copyfiles -u 1 \"src/res/*\" dist && node build/post-build.js && pnpm pack dist --pack-destination ../../../.build",
+        "clean": "rimraf dist bundle",
+        "build": "pnpm clean && pnpm lint --max-warnings=0 && tsup-node && node build/post-build.js && pnpm pack --pack-destination ../../.build",
         "bundle": "rimraf bundle && pnpm lint --max-warnings=0 && node build/bundle.js --minify",
-        "watch": "tsc --watch",
+        "watch": "tsup-node --watch",
         "lint": "eslint src tests --ext ts",
-        "test": "jest",
+        "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" jest",
         "prepublishOnly": "pnpm build",
-        "postinstall": "node bin/post-install.js"
+        "postinstall": "node scripts/post-install.js"
+    },
+    "exports": {
+        "./plugins/prisma": {
+            "import": {
+                "types": "./dist/plugins/prisma.d.mts",
+                "default": "./dist/plugins/prisma.mjs"    
+            },
+            "require": {
+                "types": "./dist/plugins/prisma.d.ts",
+                "default": "./dist/plugins/prisma.js"  
+            }
+        },
+        "./plugins/enhancer": {
+            "import": {
+                "types": "./dist/plugins/enhancer.d.mts",
+                "default": "./dist/plugins/enhancer.mjs"    
+            },
+            "require": {
+                "types": "./dist/plugins/enhancer.d.ts",
+                "default": "./dist/plugins/enhancer.js"  
+            }
+        },
+        "./plugins/zod": {
+            "import": {
+                "types": "./dist/plugins/zod.d.mts",
+                "default": "./dist/plugins/zod.mjs"    
+            },
+            "require": {
+                "types": "./dist/plugins/zod.d.ts",
+                "default": "./dist/plugins/zod.js"  
+            }
+        },
+        "./language-server/zmodel-module": {
+            "import": {
+                "types": "./dist/language-server/zmodel-module.d.mts",
+                "default": "./dist/language-server/zmodel-module.mjs"    
+            },
+            "require": {
+                "types": "./dist/language-server/zmodel-module.d.ts",
+                "default": "./dist/language-server/zmodel-module.js"  
+            }
+        },
+        "./utils/ast-utils": {
+            "import": {
+                "types": "./dist/utils/ast-utils.d.mts",
+                "default": "./dist/utils/ast-utils.mjs"    
+            },
+            "require": {
+                "types": "./dist/utils/ast-utils.d.ts",
+                "default": "./dist/utils/ast-utils.js"  
+            }
+        },
+        "./cli": {
+            "import": {
+                "types": "./dist/cli/index.d.mts",
+                "default": "./dist/cli/index.mjs"    
+            },
+            "require": {
+                "types": "./dist/cli/index.d.ts",
+                "default": "./dist/cli/index.js"  
+            }
+        },
+        "./cli/cli-util": {
+            "import": {
+                "types": "./dist/cli/cli-util.d.mts",
+                "default": "./dist/cli/cli-util.mjs"    
+            },
+            "require": {
+                "types": "./dist/cli/cli-util.d.ts",
+                "default": "./dist/cli/cli-util.js"  
+            }
+        },
+        "./package.json": "./package.json"
     },
     "dependencies": {
         "@paralleldrive/cuid2": "^2.2.0",

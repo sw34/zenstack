@@ -2,10 +2,9 @@
     "name": "integration",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
     "scripts": {
         "lint": "eslint . --ext .ts",
-        "test": "jest"
+        "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" pnpm jest"
     },
     "keywords": [],
     "author": "",
@@ -13,6 +12,7 @@
     "devDependencies": {
         "@types/bcryptjs": "^2.4.2",
         "@types/fs-extra": "^11.0.1",
+        "@types/node": "^22.10.2",
         "@types/pg": "^8.10.2",
         "@types/supertest": "^2.0.12",
         "@types/tmp": "^0.2.3",
@@ -29,7 +29,6 @@
         "zenstack": "workspace: *"
     },
     "dependencies": {
-        "@types/node": "^18.0.0",
         "@zenstackhq/sdk": "workspace:*",
         "@zenstackhq/testtools": "workspace:*",
         "bcryptjs": "^2.4.3",

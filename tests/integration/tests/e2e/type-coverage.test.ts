@@ -1,4 +1,4 @@
-import { AuthUser } from '@zenstackhq/runtime';
+import type { AuthUser } from '@zenstackhq/runtime';
 import { loadSchema, run, type FullDbClientContract } from '@zenstackhq/testtools';
 import Decimal from 'decimal.js';
 import superjson from 'superjson';

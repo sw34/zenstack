@@ -3,17 +3,20 @@
 import { ZModelCodeGenerator } from '@zenstackhq/sdk';
 import { DataModel, DataModelAttribute, DataModelFieldAttribute } from '@zenstackhq/sdk/ast';
 import fs from 'fs';
+import { fileURLToPath } from 'node:url';
 import path from 'path';
 import { loadModel } from '../utils';
+
+const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
 describe('ZModel Generator Tests', () => {
     const generator = new ZModelCodeGenerator();
 
     it('run generator', async () => {
-        const content = fs.readFileSync(path.join(__dirname, './all-features.zmodel'), 'utf-8');
+        const content = fs.readFileSync(path.join(_dirname, './all-features.zmodel'), 'utf-8');
         const model = await loadModel(content, true, false, false);
         const generated = generator.generate(model);
-        // fs.writeFileSync(path.join(__dirname, './all-features-baseline.zmodel'), generated, 'utf-8');
+        // fs.writeFileSync(path.join(_dirname, './all-features-baseline.zmodel'), generated, 'utf-8');
         await loadModel(generated);
     });
 

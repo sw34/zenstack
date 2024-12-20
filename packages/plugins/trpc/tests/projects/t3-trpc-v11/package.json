@@ -22,13 +22,18 @@
         "@trpc/next": "^11.0.0-rc.446",
         "@trpc/react-query": "^11.0.0-rc.446",
         "@trpc/server": "^11.0.0-rc.446",
+        "@zenstackhq/language": "file:../../../../../../.build/zenstackhq-language-2.10.1.tgz",
+        "@zenstackhq/runtime": "file:../../../../../../.build/zenstackhq-runtime-2.10.1.tgz",
+        "@zenstackhq/sdk": "file:../../../../../../.build/zenstackhq-sdk-2.10.1.tgz",
+        "@zenstackhq/trpc": "file:../../../",
         "geist": "^1.3.0",
         "next": "^14.2.4",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
         "server-only": "^0.0.1",
         "superjson": "^2.2.1",
-        "zod": "^3.22.4"        
+        "zenstack": "file:../../../../../../.build/zenstack-2.10.1.tgz",
+        "zod": "^3.22.4"
     },
     "devDependencies": {
         "@types/eslint": "^8.56.10",

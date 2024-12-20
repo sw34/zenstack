@@ -1,11 +1,11 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-    entry: ['src/runtime/index.ts'],
-    outDir: 'dist/runtime',
+    entry: { index: 'src/index.ts', runtime: 'src/runtime/index.ts' },
+    outDir: 'dist',
     splitting: false,
     sourcemap: true,
     clean: true,
     dts: true,
-    format: ['cjs', 'esm'],
+    format: ['esm', 'cjs'],
 });

@@ -16,12 +16,15 @@ import { SupportedClientHelpers } from '../utils';
 import * as NextHelpers from './next';
 import * as NuxtHelpers from './nuxt';
 import * as ReactHelpers from './react';
+import { fileURLToPath } from 'node:url';
 
 const helpers = {
     react: ReactHelpers,
     next: NextHelpers,
     nuxt: NuxtHelpers,
 };
+
+const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
 export function generateClientTypingForModel(
     project: Project,
@@ -91,7 +94,7 @@ export function createClientHelperEntries(
     version: string
 ) {
     // generate utils
-    const content = fs.readFileSync(path.join(__dirname, `../res/client/${version}/utils.ts`), 'utf-8');
+    const content = fs.readFileSync(path.join(_dirname, `../res/client/${version}/utils.ts`), 'utf-8');
     project.createSourceFile(path.resolve(outputDir, 'client', `utils.ts`), content, {
         overwrite: true,
     });
@@ -108,7 +111,7 @@ function createClientHelperEntryForType(
     version: string,
     outputDir: string
 ) {
-    const content = fs.readFileSync(path.join(__dirname, `../res/client/${version}/${clientHelperType}.ts`), 'utf-8');
+    const content = fs.readFileSync(path.join(_dirname, `../res/client/${version}/${clientHelperType}.ts`), 'utf-8');
     const sf = project.createSourceFile(path.resolve(outputDir, 'client', `${clientHelperType}.ts`), content, {
         overwrite: true,
     });

@@ -1,4 +1,4 @@
-import { DataSource, isInvocationExpr } from '@zenstackhq/language/ast';
+import { DataSource, isInvocationExpr } from '@zenstackhq/sdk/ast';
 import { AstValidator } from '../types';
 import { ValidationAcceptor } from 'langium';
 import { getStringLiteral, validateDuplicatedDeclarations } from './utils';

@@ -8,8 +8,10 @@ import { loadDocument } from '../../src/cli/cli-util';
 import { PrismaSchemaGenerator } from '../../src/plugins/prisma/schema-generator';
 import { execSync } from '../../src/utils/exec-utils';
 import { loadModel } from '../utils';
+import { fileURLToPath } from 'node:url';
 
 tmp.setGracefulCleanup();
+const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
 describe('Prisma generator test', () => {
     let origDir: string;
@@ -424,7 +426,7 @@ describe('Prisma generator test', () => {
     });
 
     it('abstract multi files', async () => {
-        const model = await loadDocument(path.join(__dirname, './zmodel/schema.zmodel'));
+        const model = await loadDocument(path.join(_dirname, './zmodel/schema.zmodel'));
 
         const { name } = tmp.fileSync({ postfix: '.prisma' });
         await new PrismaSchemaGenerator(model).generate({
@@ -488,7 +490,7 @@ describe('Prisma generator test', () => {
         });
 
         const content = fs.readFileSync(name, 'utf-8');
-        const expected = fs.readFileSync(path.join(__dirname, './prisma/multi-level-inheritance.prisma'), 'utf-8');
+        const expected = fs.readFileSync(path.join(_dirname, './prisma/multi-level-inheritance.prisma'), 'utf-8');
 
         expect(content).toBe(expected);
     });
@@ -520,7 +522,7 @@ describe('Prisma generator test', () => {
         });
 
         const content = fs.readFileSync(name, 'utf-8');
-        const expected = fs.readFileSync(path.join(__dirname, './prisma/format.prisma'), 'utf-8');
+        const expected = fs.readFileSync(path.join(_dirname, './prisma/format.prisma'), 'utf-8');
 
         expect(content).toBe(expected);
     });

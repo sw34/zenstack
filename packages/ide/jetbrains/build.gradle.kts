@@ -41,7 +41,7 @@ tasks {
                 into("${destinationDir.path}/zenstack/language-server/")
             }
             copy {
-                from("${project.projectDir}/../../schema/src/res/stdlib.zmodel")
+                from("${project.projectDir}/../../schema/res/stdlib.zmodel")
                 into("${destinationDir.path}/zenstack/res/")
             }
             copy {

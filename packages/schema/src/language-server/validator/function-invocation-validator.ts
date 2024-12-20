@@ -12,7 +12,7 @@ import {
     isDataModelAttribute,
     isDataModelFieldAttribute,
     isLiteralExpr,
-} from '@zenstackhq/language/ast';
+} from '@zenstackhq/sdk/ast';
 import {
     ExpressionContext,
     getFieldReference,

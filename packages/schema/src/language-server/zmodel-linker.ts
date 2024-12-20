@@ -36,7 +36,7 @@ import {
     isReferenceExpr,
     isStringLiteral,
     isTypeDefField,
-} from '@zenstackhq/language/ast';
+} from '@zenstackhq/sdk/ast';
 import { getAuthDecl, getModelFieldsWithBases, isAuthInvocation, isFutureExpr } from '@zenstackhq/sdk';
 import {
     AstNode,

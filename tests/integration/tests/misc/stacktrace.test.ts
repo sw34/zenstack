@@ -1,17 +1,6 @@
 import { loadSchema } from '@zenstackhq/testtools';
-import path from 'path';
 
 describe('Stack trace tests', () => {
-    let origDir: string;
-
-    beforeAll(async () => {
-        origDir = path.resolve('.');
-    });
-
-    afterEach(() => {
-        process.chdir(origDir);
-    });
-
     it('stack trace', async () => {
         const { enhance } = await loadSchema(
             `

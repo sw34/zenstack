@@ -4,17 +4,13 @@
     "displayName": "ZenStack Server-side Adapters",
     "description": "ZenStack server-side adapters",
     "homepage": "https://zenstack.dev",
+    "files": ["dist"],
     "scripts": {
-        "clean": "rimraf dist",
-        "build": "pnpm lint --max-warnings=0 && pnpm clean && tsc && copyfiles ./package.json ./README.md ./LICENSE dist && pnpm pack dist --pack-destination ../../../.build",
-        "watch": "tsc --watch",
+        "build": "pnpm lint --max-warnings=0 && tsup-node && pnpm pack --pack-destination ../../.build",
+        "watch": "tsup-node --watch",
         "lint": "eslint src --ext ts",
-        "test": "jest",
+        "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" jest",
         "prepublishOnly": "pnpm build"
-    },
-    "publishConfig": {
-        "directory": "dist",
-        "linkDirectory": true
     },
     "keywords": [
         "fastify",
@@ -61,18 +57,93 @@
     },
     "exports": {
         "./package.json": "./package.json",
-        "./api": "./api/index.js",
-        "./api/rest": "./api/rest/index.js",
-        "./api/rpc": "./api/rpc/index.js",
-        "./express": "./express/index.js",
-        "./fastify": "./fastify/index.js",
-        "./next/app-route-handler": "./next/app-route-handler.js",
-        "./next": "./next/index.js",
-        "./next/pages-route-handler": "./next/pages-route-handler.js",
-        "./sveltekit": "./sveltekit/index.js",
-        "./nuxt": "./nuxt/index.js",
-        "./nestjs": "./nestjs/index.js",
-        "./hono": "./hono/index.js",
-        "./types": "./types.js"
+        "./api": {
+            "import": {
+                "types": "./dist/api.d.mts",
+                "default": "./dist/api.mjs"
+            },
+            "require": {
+                "types": "./dist/api.d.ts",
+                "default": "./dist/api.js"
+            }
+        },
+        "./express": {
+            "import": {
+                "types": "./dist/express.d.mts",
+                "default": "./dist/express.mjs"
+            },
+            "require": {
+                "types": "./dist/express.d.ts",
+                "default": "./dist/express.js"
+            }
+        },
+        "./fastify":{
+            "import": {
+                "types": "./dist/fastify.d.mts",
+                "default": "./dist/fastify.mjs"
+            },
+            "require": {
+                "types": "./dist/fastify.d.ts",
+                "default": "./dist/fastify.js"
+            }
+        },
+        "./next": {
+            "import": {
+                "types": "./dist/next.d.mts",
+                "default": "./dist/next.mjs"
+            },
+            "require": {
+                "types": "./dist/next.d.ts",
+                "default": "./dist/next.js"
+            }
+        },
+        "./sveltekit": {
+            "import": {
+                "types": "./dist/sveltekit.d.mts",
+                "default": "./dist/sveltekit.mjs"
+            },
+            "require": {
+                "types": "./dist/sveltekit.d.ts",
+                "default": "./dist/sveltekit.js"
+            }
+        },
+        "./nuxt": {
+            "import": {
+                "types": "./dist/nuxt.d.mts",
+                "default": "./dist/nuxt.mjs"
+            },
+            "require": {
+                "types": "./dist/nuxt.d.ts",
+                "default": "./dist/nuxt.js"
+            }
+        },
+        "./nestjs": {
+            "import": {
+                "types": "./dist/nestjs.d.mts",
+                "default": "./dist/nestjs.mjs"
+            },
+            "require": {
+                "types": "./dist/nestjs.d.ts",
+                "default": "./dist/nestjs.js"
+            }
+        },
+        "./hono": {
+            "import": {
+                "types": "./dist/hono.d.mts",
+                "default": "./dist/hono.mjs"
+            },
+            "require": {
+                "types": "./dist/hono.d.ts",
+                "default": "./dist/hono.js"
+            }
+        },
+        "./types":{
+            "import": {
+                "types": "./dist/types.d.mts"
+            },
+            "require": {
+                "types": "./dist/types.d.ts"
+            }
+        }
     }
 }

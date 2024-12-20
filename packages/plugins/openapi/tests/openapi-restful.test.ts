@@ -4,21 +4,24 @@
 import OpenAPIParser from '@readme/openapi-parser';
 import { getLiteral, getObjectLiteral } from '@zenstackhq/sdk';
 import { Model, Plugin, isPlugin } from '@zenstackhq/sdk/ast';
-import { loadZModelAndDmmf, normalizePath } from '@zenstackhq/testtools';
+import { loadZModelAndDmmf } from '@zenstackhq/testtools';
 import fs from 'fs';
+import { fileURLToPath } from 'node:url';
 import path from 'path';
 import * as tmp from 'tmp';
 import YAML from 'yaml';
 import generate from '../src';
 
 tmp.setGracefulCleanup();
+const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+const provider = `${path.join(_dirname, '../')}`;
 
 describe('Open API Plugin RESTful Tests', () => {
     it('run plugin', async () => {
         for (const specVersion of ['3.0.0', '3.1.0']) {
             const { model, dmmf, modelFile } = await loadZModelAndDmmf(`
 plugin openapi {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '${provider}'
     specVersion = '${specVersion}'
 }
 
@@ -123,7 +126,7 @@ model Bar {
             const parsed = YAML.parse(fs.readFileSync(output, 'utf-8'));
             expect(parsed.openapi).toBe(specVersion);
             const baseline = YAML.parse(
-                fs.readFileSync(`${__dirname}/baseline/rest-${specVersion}.baseline.yaml`, 'utf-8')
+                fs.readFileSync(`${_dirname}/baseline/rest-${specVersion}.baseline.yaml`, 'utf-8')
             );
             expect(parsed).toMatchObject(baseline);
         }
@@ -132,7 +135,7 @@ model Bar {
     it('options', async () => {
         const { model, dmmf, modelFile } = await loadZModelAndDmmf(`
 plugin openapi {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '${provider}'
     specVersion = '3.0.0'
     title = 'My Awesome API'
     version = '1.0.0'
@@ -169,7 +172,7 @@ model User {
     it('security schemes valid', async () => {
         const { model, dmmf, modelFile } = await loadZModelAndDmmf(`
 plugin openapi {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '${provider}'
     securitySchemes = { 
         myBasic: { type: 'http', scheme: 'basic' },
         myBearer: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
@@ -216,7 +219,7 @@ model Post {
     it('security model level override', async () => {
         const { model, dmmf, modelFile } = await loadZModelAndDmmf(`
 plugin openapi {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '${provider}'
     securitySchemes = { 
         myBasic: { type: 'http', scheme: 'basic' }
     }
@@ -248,7 +251,7 @@ model User {
     it('security schemes invalid', async () => {
         const { model, dmmf, modelFile } = await loadZModelAndDmmf(`
 plugin openapi {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '${provider}'
     securitySchemes = { 
         myBasic: { type: 'invalid', scheme: 'basic' }
     }
@@ -269,7 +272,7 @@ model User {
     it('ignored model used as relation', async () => {
         const { model, dmmf, modelFile } = await loadZModelAndDmmf(`
 plugin openapi {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '${provider}'
 }
 
 model User {
@@ -302,7 +305,7 @@ model Post {
         for (const specVersion of ['3.0.0', '3.1.0']) {
             const { model, dmmf, modelFile } = await loadZModelAndDmmf(`
 plugin openapi {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '${provider}'
     specVersion = '${specVersion}'
 }
 
@@ -334,7 +337,7 @@ model Foo {
             const parsed = YAML.parse(fs.readFileSync(output, 'utf-8'));
             expect(parsed.openapi).toBe(specVersion);
             const baseline = YAML.parse(
-                fs.readFileSync(`${__dirname}/baseline/rest-type-coverage-${specVersion}.baseline.yaml`, 'utf-8')
+                fs.readFileSync(`${_dirname}/baseline/rest-type-coverage-${specVersion}.baseline.yaml`, 'utf-8')
             );
             expect(parsed).toMatchObject(baseline);
         }
@@ -343,7 +346,7 @@ model Foo {
     it('exposes individual fields from a compound id as attributes', async () => {
         const { model, dmmf, modelFile } = await loadZModelAndDmmf(`
 plugin openapi {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '${provider}'
 }
 
 model User {

@@ -1,6 +1,8 @@
+import { STD_LIB_MODULE_NAME } from '@zenstackhq/sdk';
 import { Model } from '@zenstackhq/sdk/ast';
 import * as fs from 'fs';
 import { NodeFileSystem } from 'langium/node';
+import { fileURLToPath } from 'node:url';
 import * as path from 'path';
 import * as tmp from 'tmp';
 import { URI } from 'vscode-uri';
@@ -8,6 +10,7 @@ import { createZModelServices } from '../src/language-server/zmodel-module';
 import { mergeBaseModels } from '../src/utils/ast-utils';
 
 tmp.setGracefulCleanup();
+const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
 type Errorish = Error | { message: string; stack?: string } | string;
 
@@ -34,7 +37,7 @@ export async function loadModel(content: string, validate = true, verbose = true
     fs.writeFileSync(docPath, content);
     const { shared, ZModel } = createZModelServices(NodeFileSystem);
     const stdLib = shared.workspace.LangiumDocuments.getOrCreateDocument(
-        URI.file(path.resolve(__dirname, '../../schema/src/res/stdlib.zmodel'))
+        URI.file(path.resolve(_dirname, '../../schema/res', STD_LIB_MODULE_NAME))
     );
     const doc = shared.workspace.LangiumDocuments.getOrCreateDocument(URI.file(docPath));
 

@@ -1,5 +1,6 @@
-import { AuthUser } from '@zenstackhq/runtime';
+import type { AuthUser } from '@zenstackhq/runtime';
 import { createPostgresDb, dropPostgresDb, loadSchemaFromFile, type FullDbClientContract } from '@zenstackhq/testtools';
+import { fileURLToPath } from 'node:url';
 import path from 'path';
 
 const DB_NAME = 'todo-pg';
@@ -16,8 +17,9 @@ describe('With Policy: with postgres', () => {
 
     beforeEach(async () => {
         dbUrl = await createPostgresDb(DB_NAME);
+        const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
         const { prisma: _prisma, enhance } = await loadSchemaFromFile(
-            path.join(__dirname, '../../schema/todo-pg.zmodel'),
+            path.join(_dirname, '../../schema/todo-pg.zmodel'),
             {
                 provider: 'postgresql',
                 dbUrl,

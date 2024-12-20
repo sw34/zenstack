@@ -32,7 +32,6 @@ function makeUrl(model: string, operation: string, args?: unknown) {
 }
 
 describe('SWR React Hooks Test', () => {
-    // let cache: Map<string, any>;
     const wrapper = ({ children }: { children: React.ReactNode }) => (
         <SWRConfig value={{ dedupingInterval: 0 }}>
             <RequestHandlerContext.Provider value={{ endpoint: ENDPOINT, logging: true }}>
@@ -47,7 +46,6 @@ describe('SWR React Hooks Test', () => {
         await waitFor(async () => {
             await result.current.mutate(() => true, undefined, { revalidate: false });
         });
-        // await result.current.mutate(() => true, undefined, { revalidate: false });
     });
 
     it('simple query', async () => {

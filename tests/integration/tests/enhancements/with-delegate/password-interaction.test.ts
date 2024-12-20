@@ -1,5 +1,5 @@
 import { loadSchema } from '@zenstackhq/testtools';
-import { compareSync } from 'bcryptjs';
+import bcryptjs from 'bcryptjs';
 
 describe('Polymorphic @omit', () => {
     const model = `
@@ -32,8 +32,8 @@ describe('Polymorphic @omit', () => {
 
         const db = enhance();
         const post = await db.post.create({ data: { title: 'Post1', assetPassword: 'asset', postPassword: 'post' } });
-        expect(compareSync('asset', post.assetPassword)).toBeTruthy();
-        expect(compareSync('post', post.postPassword)).toBeTruthy();
+        expect(bcryptjs.compareSync('asset', post.assetPassword)).toBeTruthy();
+        expect(bcryptjs.compareSync('post', post.postPassword)).toBeTruthy();
     });
 
     it('hashes when created nested', async () => {
@@ -44,7 +44,7 @@ describe('Polymorphic @omit', () => {
             data: { posts: { create: { title: 'Post1', assetPassword: 'asset', postPassword: 'post' } } },
             include: { posts: true },
         });
-        expect(compareSync('asset', user.posts[0].assetPassword)).toBeTruthy();
-        expect(compareSync('post', user.posts[0].postPassword)).toBeTruthy();
+        expect(bcryptjs.compareSync('asset', user.posts[0].assetPassword)).toBeTruthy();
+        expect(bcryptjs.compareSync('post', user.posts[0].postPassword)).toBeTruthy();
     });
 });

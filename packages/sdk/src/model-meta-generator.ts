@@ -15,7 +15,7 @@ import {
     ReferenceExpr,
     TypeDef,
     TypeDefField,
-} from '@zenstackhq/language/ast';
+} from './ast';
 import type { RuntimeAttribute } from '@zenstackhq/runtime';
 import { streamAst } from 'langium';
 import { lowerCaseFirst } from 'lower-case-first';
@@ -344,9 +344,9 @@ function getBackLink(field: DataModelField) {
     const relName = getRelationName(field);
 
     let sourceModel: DataModel;
-    if (field.$inheritedFrom && isDelegateModel(field.$inheritedFrom)) {
+    if ((field as any).$inheritedFrom && isDelegateModel((field as any).$inheritedFrom)) {
         // field is inherited from a delegate model, use it as the source
-        sourceModel = field.$inheritedFrom;
+        sourceModel = (field as any).$inheritedFrom;
     } else {
         // otherwise use the field's container model as the source
         sourceModel = field.$container as DataModel;

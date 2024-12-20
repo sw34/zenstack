@@ -13,11 +13,16 @@
         "@prisma/client": "6.0.x",
         "@trpc/client": "^10.45.2",
         "@trpc/server": "^10.45.2",
+        "@zenstackhq/language": "file:../../../../../../.build/zenstackhq-language-2.10.1.tgz",
+        "@zenstackhq/runtime": "file:../../../../../../.build/zenstackhq-runtime-2.10.1.tgz",
+        "@zenstackhq/sdk": "file:../../../../../../.build/zenstackhq-sdk-2.10.1.tgz",
+        "@zenstackhq/trpc": "file:../../../",
         "nuxt": "^3.14.1592",
         "trpc-nuxt": "^0.10.22",
         "vue": "latest",
         "vue-router": "latest",
-        "zod": "^3.22.4"        
+        "zenstack": "file:../../../../../../.build/zenstack-2.10.1.tgz",
+        "zod": "^3.22.4"
     },
     "devDependencies": {
         "esbuild": "^0.24.0",

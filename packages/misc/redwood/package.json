@@ -7,6 +7,7 @@
         "type": "git",
         "url": "https://github.com/zenstackhq/zenstack"
     },
+    "type": "module",
     "scripts": {
         "clean": "rimraf dist",
         "build": "pnpm lint --max-warnings=0 && pnpm clean && tsc && pnpm pack dist --pack-destination ../../../.build",
@@ -25,9 +26,7 @@
             "default": "./dist/graphql.js",
             "types": "./dist/graphql.d.ts"
         },
-        "./package.json": {
-            "default": "./package.json"
-        }
+        "./package.json": "./package.json"
     },
     "bin": "bin/cli",
     "engines": {

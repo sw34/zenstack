@@ -1,5 +1,6 @@
 import { AuthUser, PrismaErrorCode } from '@zenstackhq/runtime';
 import { createPostgresDb, dropPostgresDb, loadSchemaFromFile, type FullDbClientContract } from '@zenstackhq/testtools';
+import { fileURLToPath } from 'node:url';
 import path from 'path';
 
 const DB_NAME = 'refactor';
@@ -13,6 +14,7 @@ describe('With Policy: refactor tests', () => {
     let adminDb: FullDbClientContract;
     let user1Db: FullDbClientContract;
     let user2Db: FullDbClientContract;
+    const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
     beforeAll(async () => {
         origDir = path.resolve('.');
@@ -22,7 +24,7 @@ describe('With Policy: refactor tests', () => {
         dbUrl = await createPostgresDb(DB_NAME);
 
         const { prisma: _prisma, enhance } = await loadSchemaFromFile(
-            path.join(__dirname, '../../schema/refactor-pg.zmodel'),
+            path.join(_dirname, '../../schema/refactor-pg.zmodel'),
             {
                 provider: 'postgresql',
                 dbUrl,

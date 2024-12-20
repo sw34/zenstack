@@ -2,7 +2,7 @@ require('dotenv').config({ path: './.env.local' });
 require('dotenv').config({ path: './.env' });
 const fs = require('fs');
 
-const filesToReplace = ['dist/bin/post-install.js', 'dist/constants.js'];
+const filesToReplace = ['dist/post-install.js', 'dist/cli/index.mjs'];
 for (const file of filesToReplace) {
     let content = fs.readFileSync(file, 'utf-8');
     if (process.env.TELEMETRY_TRACKING_TOKEN) {
@@ -16,14 +16,14 @@ for (const file of filesToReplace) {
     });
 }
 
-let cliContent = fs.readFileSync('dist/cli/index.js', 'utf-8');
+let cliContent = fs.readFileSync('dist/cli/index.mjs', 'utf-8');
 if (process.env.DEFAULT_NPM_TAG) {
     cliContent = cliContent.replace('<DEFAULT_NPM_TAG>', process.env.DEFAULT_NPM_TAG);
 } else {
     cliContent = cliContent.replace('<DEFAULT_NPM_TAG>', 'latest');
 }
 
-console.log('Updating file: dist/cli/index.js');
-fs.writeFileSync('dist/cli/index.js', cliContent, {
+console.log('Updating file: dist/cli/index.mjs');
+fs.writeFileSync('dist/cli/index.mjs', cliContent, {
     encoding: 'utf-8',
 });

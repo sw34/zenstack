@@ -10,4 +10,3 @@ build
 jest.config.ts
 tsconfig.json
 dist
-README-global.md

@@ -1,8 +1,7 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-    entry: ['src/cross/index.ts'],
-    outDir: 'dist/cross',
+    entry: ['src/index.ts', 'src/jest-ext.ts'],
     splitting: false,
     sourcemap: true,
     clean: true,

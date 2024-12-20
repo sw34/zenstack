@@ -1,9 +1,11 @@
 /// <reference types="@types/jest" />
 
-import { loadSchema, normalizePath } from '@zenstackhq/testtools';
+import { loadSchema } from '@zenstackhq/testtools';
 import fs from 'fs';
 import path from 'path';
 import tmp from 'tmp';
+
+tmp.setGracefulCleanup();
 
 describe('SWR Plugin Tests', () => {
     let origDir: string;
@@ -52,7 +54,7 @@ model Foo {
         await loadSchema(
             `
 plugin swr {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '@zenstackhq/swr'
     output = '$projectRoot/hooks'
 }
 
@@ -61,12 +63,7 @@ ${sharedModel}
             {
                 provider: 'postgresql',
                 pushDb: false,
-                extraDependencies: [
-                    `${normalizePath(path.join(__dirname, '../dist'))}`,
-                    'react@18.2.0',
-                    '@types/react@18.2.0',
-                    'swr@^2',
-                ],
+                extraDependencies: ['react@18.2.0', '@types/react@18.2.0', 'swr@^2'],
                 compile: true,
             }
         );
@@ -80,7 +77,7 @@ ${sharedModel}
         await loadSchema(
             `
         plugin swr {
-            provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+            provider = '@zenstackhq/swr'
             output = '$projectRoot/swr'
         }
     
@@ -95,7 +92,6 @@ ${sharedModel}
             {
                 pushDb: false,
                 projectDir,
-                extraDependencies: [`${normalizePath(path.join(__dirname, '../dist'))}`],
             }
         );
 
@@ -110,7 +106,7 @@ ${sharedModel}
             loadSchema(
                 `
         plugin swr {
-            provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+            provider = '@zenstackhq/swr'
             output = '$projectRoot/swr'
         }
     
@@ -122,7 +118,7 @@ ${sharedModel}
             password String @omit
         }        
         `,
-                { pushDb: false, projectDir, extraDependencies: [`${normalizePath(path.join(__dirname, '../dist'))}`] }
+                { pushDb: false, projectDir }
             )
         ).rejects.toThrow('already exists and is not a directory');
     });

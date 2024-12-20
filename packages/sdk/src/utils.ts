@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     AstNode,
     Attribute,
@@ -34,7 +35,7 @@ import {
     ReferenceExpr,
     TypeDef,
     TypeDefField,
-} from '@zenstackhq/language/ast';
+} from './ast';
 import fs from 'node:fs';
 import path from 'path';
 import { ExpressionContext, STD_LIB_MODULE_NAME } from './constants';
@@ -161,10 +162,10 @@ export function getAttributeArgs(
 ): Record<string, Expression> {
     const result: Record<string, Expression> = {};
     for (const arg of attr.args) {
-        if (!arg.$resolvedParam) {
+        if (!(arg as any).$resolvedParam) {
             continue;
         }
-        result[arg.$resolvedParam.name] = arg.value;
+        result[(arg as any).$resolvedParam.name] = arg.value;
     }
     return result;
 }
@@ -174,7 +175,7 @@ export function getAttributeArg(
     name: string
 ): Expression | undefined {
     for (const arg of attr.args) {
-        if (arg.$resolvedParam?.name === name) {
+        if ((arg as any).$resolvedParam?.name === name) {
             return arg.value;
         }
     }
@@ -186,7 +187,7 @@ export function getAttributeArgLiteral<T extends string | number | boolean>(
     name: string
 ): T | undefined {
     for (const arg of attr.args) {
-        if (arg.$resolvedParam?.name === name) {
+        if ((arg as any).$resolvedParam?.name === name) {
             return getLiteral<T>(arg.value);
         }
     }
@@ -205,14 +206,14 @@ export function isDataModelFieldReference(node: AstNode): node is ReferenceExpr 
  * Gets `@@id` fields declared at the data model level (including search in base models)
  */
 export function getModelIdFields(model: DataModel) {
-    const modelsToCheck = model.$baseMerged ? [model] : [model, ...getRecursiveBases(model)];
+    const modelsToCheck = (model as any).$baseMerged ? [model] : [model, ...getRecursiveBases(model)];
 
     for (const modelToCheck of modelsToCheck) {
         const idAttr = modelToCheck.attributes.find((attr) => attr.decl.$refText === '@@id');
         if (!idAttr) {
             continue;
         }
-        const fieldsArg = idAttr.args.find((a) => a.$resolvedParam?.name === 'fields');
+        const fieldsArg = idAttr.args.find((a) => (a as any).$resolvedParam?.name === 'fields');
         if (!fieldsArg || !isArrayExpr(fieldsArg.value)) {
             continue;
         }
@@ -229,14 +230,14 @@ export function getModelIdFields(model: DataModel) {
  * Gets `@@unique` fields declared at the data model level (including search in base models)
  */
 export function getModelUniqueFields(model: DataModel) {
-    const modelsToCheck = model.$baseMerged ? [model] : [model, ...getRecursiveBases(model)];
+    const modelsToCheck = (model as any).$baseMerged ? [model] : [model, ...getRecursiveBases(model)];
 
     for (const modelToCheck of modelsToCheck) {
         const uniqueAttr = modelToCheck.attributes.find((attr) => attr.decl.$refText === '@@unique');
         if (!uniqueAttr) {
             continue;
         }
-        const fieldsArg = uniqueAttr.args.find((a) => a.$resolvedParam?.name === 'fields');
+        const fieldsArg = uniqueAttr.args.find((a) => (a as any).$resolvedParam?.name === 'fields');
         if (!fieldsArg || !isArrayExpr(fieldsArg.value)) {
             continue;
         }
@@ -306,7 +307,7 @@ export function isForeignKeyField(field: DataModelField) {
         const relAttr = f.attributes.find((attr) => attr.decl.ref?.name === '@relation');
         if (relAttr) {
             // find "fields" arg
-            const fieldsArg = relAttr.args.find((a) => a.$resolvedParam?.name === 'fields');
+            const fieldsArg = relAttr.args.find((a) => (a as any).$resolvedParam?.name === 'fields');
 
             if (fieldsArg && isArrayExpr(fieldsArg.value)) {
                 // find a matching field reference
@@ -495,7 +496,7 @@ export function isDiscriminatorField(field: DataModelField) {
     if (!isDataModel(field.$container)) {
         return false;
     }
-    const model = field.$inheritedFrom ?? field.$container;
+    const model = (field as any).$inheritedFrom ?? field.$container;
     const delegateAttr = getAttribute(model, '@@delegate');
     if (!delegateAttr) {
         return false;
@@ -537,7 +538,7 @@ export function getFieldReference(expr: Expression): DataModelField | TypeDefFie
 }
 
 export function getModelFieldsWithBases(model: DataModel, includeDelegate = true) {
-    if (model.$baseMerged) {
+    if ((model as any).$baseMerged) {
         return model.fields;
     } else {
         return [...model.fields, ...getRecursiveBases(model, includeDelegate).flatMap((base) => base.fields)];
@@ -593,7 +594,7 @@ export function getDataSourceProvider(model: Model) {
  * Finds the original delegate base model that defines the given field.
  */
 export function getInheritedFromDelegate(field: DataModelField) {
-    if (!field.$inheritedFrom) {
+    if (!(field as any).$inheritedFrom) {
         return undefined;
     }
 

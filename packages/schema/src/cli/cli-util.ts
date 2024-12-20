@@ -1,4 +1,5 @@
-import { isDataModel, isDataSource, isPlugin, Model } from '@zenstackhq/language/ast';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { isDataModel, isDataSource, isPlugin, Model } from '@zenstackhq/sdk/ast';
 import { getDataModelAndTypeDefs, getLiteral, hasAttribute } from '@zenstackhq/sdk';
 import colors from 'colors';
 import fs from 'fs';
@@ -17,6 +18,7 @@ import { mergeBaseModels, resolveImport, resolveTransitiveImports } from '../uti
 import { findUp } from '../utils/pkg-utils';
 import { getVersion } from '../utils/version-utils';
 import { CliError } from './cli-error';
+import { fileURLToPath } from 'node:url';
 
 // required minimal version of Prisma
 export const requiredPrismaVersion = '4.8.0';
@@ -45,8 +47,9 @@ export async function loadDocument(fileName: string, validateOnly = false): Prom
     }
 
     // load standard library
+    const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
     const stdLib = services.shared.workspace.LangiumDocuments.getOrCreateDocument(
-        URI.file(path.resolve(path.join(__dirname, '../res', STD_LIB_MODULE_NAME)))
+        URI.file(path.resolve(path.join(_dirname, '../../res', STD_LIB_MODULE_NAME)))
     );
 
     // load documents provided by plugins
@@ -195,28 +198,52 @@ export async function getPluginDocuments(services: ZModelServices, fileName: str
             if (providerField) {
                 const provider = getLiteral<string>(providerField.value);
                 if (provider) {
-                    let pluginEntrance: string | undefined;
-                    try {
-                        // direct require
-                        pluginEntrance = require.resolve(provider);
-                    } catch {
-                        if (!path.isAbsolute(provider)) {
-                            // relative path
-                            try {
-                                pluginEntrance = require.resolve(path.join(path.dirname(fileName), provider));
-                            } catch {
-                                // noop
-                            }
+                    let pluginZModel: string | undefined;
+
+                    // if (process.env.ZENSTACK_TEST === '1' && provider.startsWith('@zenstackhq/')) {
+                    //     // test code runs with its own sandbox of node_modules, make sure we don't
+                    //     // accidentally resolve to the external ones
+                    //     // const esm = typeof import.meta !== 'undefined';
+                    //     try {
+                    //         pluginZModel = path.resolve(`node_modules/${provider}/${PLUGIN_MODULE_NAME}`);
+                    //     } catch {
+                    //         // noop
+                    //     }
+                    // } else {
+
+                    if (path.isAbsolute(provider) && fs.existsSync(provider)) {
+                        const stat = fs.statSync(provider);
+                        if (stat.isFile()) {
+                            pluginZModel = path.resolve(path.dirname(provider), PLUGIN_MODULE_NAME);
+                        } else {
+                            pluginZModel = path.resolve(provider, PLUGIN_MODULE_NAME);
                         }
                     }
 
-                    if (pluginEntrance) {
-                        const pluginModelFile = path.join(path.dirname(pluginEntrance), PLUGIN_MODULE_NAME);
-                        if (fs.existsSync(pluginModelFile)) {
+                    if (!pluginZModel) {
+                        try {
+                            // direct require
+                            pluginZModel = require.resolve(`${provider}/${PLUGIN_MODULE_NAME}`);
+                        } catch {
+                            if (!path.isAbsolute(provider)) {
+                                // relative path
+                                try {
+                                    pluginZModel = require.resolve(
+                                        path.join(path.dirname(fileName), provider, PLUGIN_MODULE_NAME)
+                                    );
+                                } catch {
+                                    // noop
+                                }
+                            }
+                        }
+                    }
+                    // }
+
+                    if (pluginZModel) {
+                        // const pluginModelFile = path.join(path.dirname(pluginZModel), PLUGIN_MODULE_NAME);
+                        if (fs.existsSync(pluginZModel)) {
                             result.push(
-                                services.shared.workspace.LangiumDocuments.getOrCreateDocument(
-                                    URI.file(pluginModelFile)
-                                )
+                                services.shared.workspace.LangiumDocuments.getOrCreateDocument(URI.file(pluginZModel))
                             );
                         }
                     }
@@ -376,7 +403,7 @@ function filterIgnoredFields(model: Model) {
         if (!isDataModel(decl)) {
             return;
         }
-        decl.$allFields = [...decl.fields];
+        (decl as any).$allFields = [...decl.fields];
         decl.fields = decl.fields.filter((f) => !hasAttribute(f, '@ignore'));
     });
 }

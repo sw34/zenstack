@@ -35,6 +35,7 @@ export function ensureDefaultOutputFolder(options: PluginRunnerOptions) {
         if (!options.output) {
             const pkgJson = {
                 name: 'zenstack-generated',
+                type: 'module',
                 version: getVersion() ?? '1.0.0',
                 exports: {
                     './enhance': {

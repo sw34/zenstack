@@ -2,18 +2,16 @@
     "name": "@zenstackhq/sdk",
     "version": "2.10.1",
     "description": "ZenStack plugin development SDK",
-    "main": "index.js",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "typings": "dist/index.d.ts",
     "scripts": {
-        "clean": "rimraf dist",
         "lint": "eslint src --ext ts",
-        "build": "pnpm lint --max-warnings=0 && pnpm clean && tsc && copyfiles ./package.json ./LICENSE ./README.md dist && pnpm pack dist --pack-destination ../../../.build",
-        "watch": "tsc --watch",
+        "build": "pnpm lint --max-warnings=0 && tsup-node && pnpm pack --pack-destination ../../.build",
+        "watch": "tsup-node --watch",
         "prepublishOnly": "pnpm build"
     },
-    "publishConfig": {
-        "directory": "dist",
-        "linkDirectory": true
-    },
+    "files": ["dist"],
     "keywords": [],
     "author": "",
     "license": "MIT",
@@ -34,20 +32,44 @@
     },
     "exports": {
         ".": {
-            "types": "./index.d.ts",
-            "default": "./index.js"
+            "import": {
+                "types": "./dist/index.d.mts",
+                "default": "./dist/index.mjs"
+            },
+            "require": {
+                "types": "./dist/index.d.ts",
+                "default": "./dist/index.js"
+            }
         },
         "./ast": {
-            "types": "./ast.d.ts",
-            "default": "./ast.js"
+            "import": {
+                "types": "./dist/ast.d.mts",
+                "default": "./dist/ast.mjs"
+            },
+            "require": {
+                "types": "./dist/ast.d.ts",
+                "default": "./dist/ast.js"
+            }
         },
         "./prisma": {
-            "types": "./prisma.d.ts",
-            "default": "./prisma.js"
+            "import": {
+                "types": "./dist/prisma.d.mts",
+                "default": "./dist/prisma.mjs"
+            },
+            "require": {
+                "types": "./dist/prisma.d.ts",
+                "default": "./dist/prisma.js"
+            }
         },
         "./dmmf-helpers": {
-            "types": "./dmmf-helpers/index.d.ts",
-            "default": "./dmmf-helpers/index.js"
+            "import": {
+                "types": "./dist/dmmf-helpers/index.d.mts",
+                "default": "./dist/dmmf-helpers/index.mjs"
+            },
+            "require": {
+                "types": "./dist/dmmf-helpers/index.d.ts",
+                "default": "./dist/dmmf-helpers/index.js"
+            }
         },
         "./package.json": "./package.json"
     }

@@ -13,7 +13,7 @@ generator client {
 }
 
 plugin trpc {
-    provider = "../../../dist"
+    provider = "@zenstackhq/trpc"
     output = './server/trpc/routers/generated'
     generateClientHelpers = 'nuxt'
 }

@@ -11,25 +11,25 @@ datasource db {
 }
 
 plugin trpc {
-    provider = "../../../dist"
+    provider = "@zenstackhq/trpc"
     output = "src/server/api/routers/generated"
     generateClientHelpers = "next"
 }
 
 model User {
-    id Int @id @default(autoincrement())
+    id    Int    @id @default(autoincrement())
     email String @unique
     posts Post[]
 }
 
 model Post {
-    id Int @id @default(autoincrement())
-    name String
+    id        Int      @id @default(autoincrement())
+    name      String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    published Boolean @default(false)
-    author User @relation(fields: [authorId], references: [id])
-    authorId Int
+    published Boolean  @default(false)
+    author    User     @relation(fields: [authorId], references: [id])
+    authorId  Int
 
     @@index([name])
 }

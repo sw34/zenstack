@@ -1,14 +1,17 @@
-import { AuthUser } from '@zenstackhq/runtime';
+import type { AuthUser } from '@zenstackhq/runtime';
 import { loadSchemaFromFile, run, type FullDbClientContract } from '@zenstackhq/testtools';
-import { compareSync } from 'bcryptjs';
+import bcryptjs from 'bcryptjs';
+import { fileURLToPath } from 'node:url';
 import path from 'path';
 
 describe('Todo Presets Tests', () => {
     let getDb: (user?: AuthUser) => FullDbClientContract;
     let prisma: FullDbClientContract;
 
+    const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+
     beforeAll(async () => {
-        const { enhance, prisma: _prisma } = await loadSchemaFromFile(path.join(__dirname, '../schema/todo.zmodel'), {
+        const { enhance, prisma: _prisma } = await loadSchemaFromFile(path.join(_dirname, '../schema/todo.zmodel'), {
             addPrelude: false,
         });
         getDb = enhance;
@@ -29,7 +32,7 @@ describe('Todo Presets Tests', () => {
         const r = await user1Db.user.create({ data: { id: 'user1', email: 'abc@xyz.com', password: 'abc123' } });
         expect(r.password).toBeUndefined();
         const full = await prisma.user.findUnique({ where: { id: 'user1' } });
-        expect(compareSync('abc123', full.password)).toBe(true);
+        expect(bcryptjs.compareSync('abc123', full.password)).toBe(true);
 
         await expect(anonDb.user.findUnique({ where: { id: 'user1' } })).toResolveNull();
     });

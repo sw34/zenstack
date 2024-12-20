@@ -1,6 +1,9 @@
 import { PrismaErrorCode } from '@zenstackhq/runtime';
 import { loadSchema } from '@zenstackhq/testtools';
+import { createProgram } from 'zenstack/cli';
 import { POLYMORPHIC_MANY_TO_MANY_SCHEMA, POLYMORPHIC_SCHEMA } from './utils';
+
+console.log(createProgram);
 
 describe('Polymorphism Test', () => {
     const schema = POLYMORPHIC_SCHEMA;

@@ -1,4 +1,4 @@
-import { Model, isDataModel, isDataSource } from '@zenstackhq/language/ast';
+import { Model, isDataModel, isDataSource } from '@zenstackhq/sdk/ast';
 import { getDataModelAndTypeDefs, hasAttribute } from '@zenstackhq/sdk';
 import { LangiumDocuments, ValidationAcceptor } from 'langium';
 import { getAllDeclarationsIncludingImports, resolveImport, resolveTransitiveImports } from '../../utils/ast-utils';

@@ -1,16 +1,17 @@
-import { AuthUser } from '@zenstackhq/runtime';
+import type { AuthUser } from '@zenstackhq/runtime';
 import { loadSchemaFromFile, run, type FullDbClientContract } from '@zenstackhq/testtools';
-import path from 'path';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 describe('Todo Policy Tests', () => {
     let getDb: (user?: AuthUser) => FullDbClientContract;
     let prisma: FullDbClientContract;
 
     beforeAll(async () => {
-        const { enhance, prisma: _prisma } = await loadSchemaFromFile(
-            path.join(__dirname, '../../schema/todo.zmodel'),
-            { addPrelude: false }
-        );
+        const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+        const { enhance, prisma: _prisma } = await loadSchemaFromFile(path.join(_dirname, '../../schema/todo.zmodel'), {
+            addPrelude: false,
+        });
         getDb = enhance;
         prisma = _prisma;
     });

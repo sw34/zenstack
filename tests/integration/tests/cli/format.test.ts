@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as tmp from 'tmp';
-import { createProgram } from '../../../../packages/schema/src/cli';
+import { createProgram } from 'zenstack/cli';
 
 tmp.setGracefulCleanup();
 

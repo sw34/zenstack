@@ -6,6 +6,7 @@ import { PackageManagers, ensurePackage, installPackage } from '../../utils/pkg-
 import { getVersion } from '../../utils/version-utils';
 import { CliError } from '../cli-error';
 import { checkNewVersion } from '../cli-util';
+import { fileURLToPath } from 'node:url';
 
 type Options = {
     prisma: string | undefined;
@@ -13,6 +14,8 @@ type Options = {
     versionCheck: boolean;
     tag?: string;
 };
+
+const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * CLI action for initializing an existing project
@@ -45,7 +48,7 @@ export async function init(projectPath: string, options: Options) {
             fs.copyFileSync(prismaSchema, zmodelFile);
         } else {
             // create a new model
-            const starterContent = fs.readFileSync(path.join(__dirname, '../../res/starter.zmodel'), 'utf-8');
+            const starterContent = fs.readFileSync(path.join(_dirname, '../res/starter.zmodel'), 'utf-8');
             fs.writeFileSync(zmodelFile, starterContent);
             sampleModelGenerated = true;
         }

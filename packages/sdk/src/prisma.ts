@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 import type { DMMF } from '@prisma/generator-helper';
-import { getDMMF as _getDMMF, type GetDMMFOptions } from '@prisma/internals';
+import PrismaInternals, { type GetDMMFOptions } from '@prisma/internals';
+import * as _PrismaInternals from '@prisma/internals';
 import { DEFAULT_RUNTIME_LOAD_PATH } from '@zenstackhq/runtime';
 import path from 'path';
 import semver from 'semver';
@@ -10,6 +11,7 @@ import { RUNTIME_PACKAGE } from './constants';
 import type { PluginOptions } from './types';
 import { getDataSourceProvider } from './utils';
 import { normalizedRelative } from './path';
+import fs from 'node:fs';
 
 /**
  * Given an import context directory and plugin options, compute the import spec for the Prisma Client.
@@ -51,6 +53,7 @@ function normalizePath(p: string) {
  * Loads Prisma DMMF
  */
 export function getDMMF(options: GetDMMFOptions): Promise<DMMF.Document> {
+    const _getDMMF = PrismaInternals?.getDMMF ?? _PrismaInternals.getDMMF;
     return _getDMMF(options);
 }
 
@@ -59,10 +62,10 @@ export function getDMMF(options: GetDMMFOptions): Promise<DMMF.Document> {
  */
 export function getPrismaVersion(): string | undefined {
     if (process.env.ZENSTACK_TEST === '1') {
-        // test environment
-        try {
-            return require(path.resolve('./node_modules/@prisma/client/package.json')).version;
-        } catch {
+        const pkgJsonFile = './node_modules/@prisma/client/package.json';
+        if (fs.existsSync(pkgJsonFile)) {
+            return JSON.parse(fs.readFileSync(pkgJsonFile, 'utf-8')).version;
+        } else {
             return undefined;
         }
     }

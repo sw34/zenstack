@@ -2,22 +2,42 @@
   "name": "@zenstackhq/testtools",
   "version": "2.10.1",
   "description": "ZenStack Test Tools",
-  "main": "index.js",
   "private": true,
-  "publishConfig": {
-    "directory": "dist",
-    "linkDirectory": true
-  },
   "scripts": {
-    "clean": "rimraf dist",
     "lint": "eslint src --ext ts",
-    "build": "pnpm lint && pnpm clean && tsc && copyfiles ./package.json ./LICENSE ./README.md dist && pnpm pack dist --pack-destination ../../../.build",
-    "watch": "tsc --watch",
+    "build": "pnpm lint && tsup-node && pnpm pack --pack-destination ../../.build",
+    "watch": "tsup-node --watch",
     "prepublishOnly": "pnpm build"
   },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "typings": "dist/index.d.ts",
+  "files": ["dist"],
   "keywords": [],
   "author": "",
   "license": "MIT",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./jest-ext": {
+      "import": {
+        "types": "./dist/jest-ext.d.mts",
+        "default": "./dist/jest-ext.mjs"
+      },
+      "require": {
+        "types": "./dist/jest-ext.d.ts",
+        "default": "./dist/jest-ext.js"
+      }
+    }
+  },
   "dependencies": {
     "@zenstackhq/language": "workspace:*",
     "@zenstackhq/runtime": "workspace:*",

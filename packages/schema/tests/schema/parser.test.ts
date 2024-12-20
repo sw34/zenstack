@@ -19,7 +19,7 @@ import {
     ReferenceExpr,
     StringLiteral,
     UnaryExpr,
-} from '@zenstackhq/language/ast';
+} from '@zenstackhq/sdk/ast';
 import { loadModel } from '../utils';
 
 describe('Parsing Tests', () => {

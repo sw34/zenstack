@@ -1,3 +1,4 @@
+import { ZModelCodeGenerator, getAttribute, isEnumFieldReference, isFromStdlib } from '@zenstackhq/sdk';
 import {
     DataModelAttribute,
     DataModelFieldAttribute,
@@ -14,8 +15,7 @@ import {
     isFunctionDecl,
     isInvocationExpr,
     isMemberAccessExpr,
-} from '@zenstackhq/language/ast';
-import { ZModelCodeGenerator, getAttribute, isEnumFieldReference, isFromStdlib } from '@zenstackhq/sdk';
+} from '@zenstackhq/sdk/ast';
 import {
     AstNode,
     AstNodeDescription,

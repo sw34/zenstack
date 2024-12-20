@@ -1,9 +1,9 @@
 {
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "lib": ["ESNext", "DOM"],
-        "outDir": "dist"
+        "outDir": "dist",
+        "moduleResolution": "bundler",
+        "module": "Preserve"
     },
-    "include": ["src/**/*.ts"],
-    "exclude": ["src/browser", "src/cross"]
+    "include": ["src/**/*.ts"]
 }

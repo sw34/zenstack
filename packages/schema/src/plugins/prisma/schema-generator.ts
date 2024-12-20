@@ -29,7 +29,7 @@ import {
     NumberLiteral,
     ReferenceExpr,
     StringLiteral,
-} from '@zenstackhq/language/ast';
+} from '@zenstackhq/sdk/ast';
 import { getIdFields } from '@zenstackhq/sdk';
 import { getPrismaVersion } from '@zenstackhq/sdk/prisma';
 import { match } from 'ts-pattern';

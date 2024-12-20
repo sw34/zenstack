@@ -2,8 +2,9 @@
     "extends": "../../../tsconfig.base.json",
     "compilerOptions": {
         "lib": ["ESNext", "DOM"],
-        "outDir": "dist",
-        "jsx": "react"
+        "jsx": "react",
+        "module": "Preserve",
+        "moduleResolution": "bundler"
     },
     "include": ["src/**/*.ts"],
     "exclude": ["src/runtime", "src/runtime-v5"]

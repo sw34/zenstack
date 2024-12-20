@@ -5,9 +5,10 @@ import { getWorkspaceNpmCacheFolder } from '@zenstackhq/testtools';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as tmp from 'tmp';
-import { createProgram } from '../../../../packages/schema/src/cli';
+import { createProgram } from 'zenstack/cli';
 import { execSync } from '../../../../packages/schema/src/utils/exec-utils';
 import { createNpmrc } from './share';
+import { fileURLToPath } from 'node:url';
 
 tmp.setGracefulCleanup();
 
@@ -27,13 +28,15 @@ describe.skip('CLI init command tests', () => {
         process.chdir(origDir);
     });
 
+    const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+
     // eslint-disable-next-line jest/no-disabled-tests
     it('init project t3 npm std', async () => {
         execSync('npx --yes create-t3-app@latest --prisma --CI --noGit .', {
             stdio: 'inherit',
             env: {
                 npm_config_user_agent: 'npm',
-                npm_config_cache: getWorkspaceNpmCacheFolder(__dirname),
+                npm_config_cache: getWorkspaceNpmCacheFolder(_dirname),
             },
         });
         createNpmrc();
@@ -52,7 +55,7 @@ describe.skip('CLI init command tests', () => {
             stdio: 'inherit',
             env: {
                 npm_config_user_agent: 'yarn',
-                npm_config_cache: getWorkspaceNpmCacheFolder(__dirname),
+                npm_config_cache: getWorkspaceNpmCacheFolder(_dirname),
             },
         });
         createNpmrc();
@@ -71,7 +74,7 @@ describe.skip('CLI init command tests', () => {
             stdio: 'inherit',
             env: {
                 npm_config_user_agent: 'pnpm',
-                npm_config_cache: getWorkspaceNpmCacheFolder(__dirname),
+                npm_config_cache: getWorkspaceNpmCacheFolder(_dirname),
             },
         });
         createNpmrc();
@@ -90,7 +93,7 @@ describe.skip('CLI init command tests', () => {
             stdio: 'inherit',
             env: {
                 npm_config_user_agent: 'npm',
-                npm_config_cache: getWorkspaceNpmCacheFolder(__dirname),
+                npm_config_cache: getWorkspaceNpmCacheFolder(_dirname),
             },
         });
         createNpmrc();

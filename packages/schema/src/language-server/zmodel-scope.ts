@@ -11,7 +11,7 @@ import {
     isThisExpr,
     isTypeDef,
     isTypeDefField,
-} from '@zenstackhq/language/ast';
+} from '@zenstackhq/sdk/ast';
 import { getAuthDecl, getModelFieldsWithBases, getRecursiveBases, isAuthInvocation } from '@zenstackhq/sdk';
 import {
     AstNode,

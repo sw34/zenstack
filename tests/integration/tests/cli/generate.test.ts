@@ -5,8 +5,9 @@ import { installPackage } from '@zenstackhq/testtools';
 import * as fs from 'fs';
 import path from 'path';
 import * as tmp from 'tmp';
-import { createProgram } from '../../../../packages/schema/src/cli';
+import { createProgram } from 'zenstack/cli';
 import { createNpmrc } from './share';
+import { fileURLToPath } from 'node:url';
 
 tmp.setGracefulCleanup();
 
@@ -42,11 +43,27 @@ model Post {
         console.log(`Project dir: ${r.name}`);
         process.chdir(r.name);
 
+        const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+
         // set up project
         fs.writeFileSync('package.json', JSON.stringify({ name: 'my app', version: '1.0.0' }));
         createNpmrc();
         installPackage('prisma @prisma/client zod');
-        installPackage(path.join(__dirname, '../../../../packages/runtime/dist'));
+        installPackage(path.join(_dirname, '../../../../packages/runtime'));
+        fs.writeFileSync(
+            'tsconfig.json',
+            JSON.stringify(
+                {
+                    compilerOptions: {
+                        target: 'ESNext',
+                        moduleResolution: 'bundler',
+                        module: 'Preserve',
+                    },
+                },
+                null,
+                4
+            )
+        );
 
         // set up schema
         fs.writeFileSync('schema.zmodel', MODEL, 'utf-8');

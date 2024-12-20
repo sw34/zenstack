@@ -5,7 +5,7 @@ import {
     isDataModelField,
     isMemberAccessExpr,
     isStringLiteral,
-} from '@zenstackhq/language/ast';
+} from '@zenstackhq/sdk/ast';
 import { isAuthInvocation } from '@zenstackhq/sdk';
 import { AstNode, ValidationAcceptor } from 'langium';
 

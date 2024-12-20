@@ -20,7 +20,7 @@ import {
     isReferenceExpr,
     isTypeDef,
     isTypeDefField,
-} from '@zenstackhq/language/ast';
+} from '@zenstackhq/sdk/ast';
 import { AbstractSemanticTokenProvider, AstNode, SemanticTokenAcceptor } from 'langium';
 import { SemanticTokenTypes } from 'vscode-languageserver';
 

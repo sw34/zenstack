@@ -1,8 +1,7 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-    entry: ['src/browser/index.ts'],
-    outDir: 'dist/browser',
+    entry: ['src/index.ts'],
     splitting: false,
     sourcemap: true,
     clean: true,

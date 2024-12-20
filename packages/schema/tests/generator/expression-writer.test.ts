@@ -1,6 +1,6 @@
 /// <reference types="@types/jest" />
 
-import { DataModel, Enum, Expression, isDataModel, isEnum } from '@zenstackhq/language/ast';
+import { DataModel, Enum, Expression, isDataModel, isEnum } from '@zenstackhq/sdk/ast';
 import * as tmp from 'tmp';
 import { Project, VariableDeclarationKind } from 'ts-morph';
 import { ExpressionWriter } from '../../src/plugins/enhancer/policy/expression-writer';
@@ -1377,7 +1377,6 @@ async function check(schema: string, getExpr: (model: DataModel) => Expression, 
     });
 
     await project.save();
-    console.log('Source saved:', sourcePath);
 
     if (project.getPreEmitDiagnostics().length > 0) {
         for (const d of project.getPreEmitDiagnostics()) {

@@ -21,4 +21,8 @@ function run(cmd: string) {
 run('npm init -y');
 run('npm i --no-audit --no-fund typescript prisma@6.0.x @prisma/client@6.0.x zod@^3.22.4 decimal.js @types/node');
 
+const pkgJson = JSON.parse(fs.readFileSync(path.join(scaffoldPath, 'package.json'), 'utf-8'));
+pkgJson.type = 'module';
+fs.writeFileSync(path.join(scaffoldPath, 'package.json'), JSON.stringify(pkgJson, undefined, 4));
+
 console.log('Test scaffold setup complete.');

@@ -1,9 +1,10 @@
 {
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "target": "ES2020",
         "lib": ["ESNext", "DOM"],
-        "outDir": "dist",
+        "module": "Preserve",
+        "moduleResolution": "bundler",
+        "esModuleInterop": true,
         "strictPropertyInitialization": false
     },
     "include": ["src/**/*.ts"]

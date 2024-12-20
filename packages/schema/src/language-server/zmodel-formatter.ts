@@ -8,9 +8,9 @@ import {
     MaybePromise,
 } from 'langium';
 
-import * as ast from '@zenstackhq/language/ast';
+import * as ast from '@zenstackhq/sdk/ast';
 import { DocumentFormattingParams, FormattingOptions, TextEdit } from 'vscode-languageserver';
-import { ZModelLanguageMetaData } from '@zenstackhq/language/generated/module';
+import { ZModelLanguageMetaData } from '@zenstackhq/language/module';
 
 export class ZModelFormatter extends AbstractFormatter {
     private formatOptions?: FormattingOptions;

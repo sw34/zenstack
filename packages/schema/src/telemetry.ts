@@ -2,7 +2,8 @@ import { createId } from '@paralleldrive/cuid2';
 import { getPrismaVersion } from '@zenstackhq/sdk/prisma';
 import exitHook from 'async-exit-hook';
 import { CommanderError } from 'commander';
-import { init, Mixpanel } from 'mixpanel';
+import _MixPanel, { type Mixpanel } from 'mixpanel';
+import * as __MixPanel from 'mixpanel';
 import * as os from 'os';
 import sleep from 'sleep-promise';
 import { CliError } from './cli/cli-error';
@@ -46,6 +47,7 @@ export class Telemetry {
 
     constructor() {
         if (process.env.DO_NOT_TRACK !== '1' && TELEMETRY_TRACKING_TOKEN) {
+            const init = _MixPanel?.init ?? __MixPanel.init;
             this.mixpanel = init(TELEMETRY_TRACKING_TOKEN, {
                 geolocate: true,
             });

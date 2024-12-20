@@ -1,10 +1,13 @@
-import { isPlugin, Model } from '@zenstackhq/language/ast';
+import { isPlugin, Model } from '@zenstackhq/sdk/ast';
 import { getLiteral } from '@zenstackhq/sdk';
 import { DefaultWorkspaceManager, interruptAndCheck, LangiumDocument } from 'langium';
 import path from 'path';
 import { CancellationToken, WorkspaceFolder } from 'vscode-languageserver';
 import { URI, Utils } from 'vscode-uri';
 import { PLUGIN_MODULE_NAME, STD_LIB_MODULE_NAME } from './constants';
+import { fileURLToPath } from 'node:url';
+
+const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * Custom Langium WorkspaceManager implementation which automatically loads stdlib.zmodel
@@ -17,7 +20,7 @@ export class ZModelWorkspaceManager extends DefaultWorkspaceManager {
         _collector: (document: LangiumDocument) => void
     ): Promise<void> {
         await super.loadAdditionalDocuments(_folders, _collector);
-        const stdLibUri = URI.file(path.join(__dirname, '../res', STD_LIB_MODULE_NAME));
+        const stdLibUri = URI.file(path.join(_dirname, '../res', STD_LIB_MODULE_NAME));
         console.log(`Adding stdlib document from ${stdLibUri}`);
         const stdlib = this.langiumDocuments.getOrCreateDocument(stdLibUri);
         _collector(stdlib);

@@ -8,85 +8,166 @@
         "url": "https://github.com/zenstackhq/zenstack"
     },
     "scripts": {
-        "clean": "rimraf dist",
-        "build": "pnpm lint --max-warnings=0 && pnpm clean && tsc && tsup-node --config ./tsup-browser.config.ts && tsup-node --config ./tsup-cross.config.ts && copyfiles ./package.json ./README.md ../../LICENSE dist && copyfiles -u1 \"res/**/*\" dist && pnpm pack dist --pack-destination ../../../.build",
-        "watch": "concurrently \"tsc --watch\" \"tsup-node --config ./tsup-browser.config.ts --watch\" \"tsup-node --config ./tsup-cross.config.ts --watch\"",
+        "build": "pnpm lint --max-warnings=0 && pnpm zx --verbose ./scripts/build.mjs && pnpm pack --pack-destination ../../.build",
+        "watch": "tsup-node --watch",
         "lint": "eslint src --ext ts",
+        "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" jest",
         "prepublishOnly": "pnpm build"
     },
-    "main": "index.js",
-    "types": "index.d.ts",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "typings": "dist/index.d.ts",
+    "files": ["dist"],
     "exports": {
         ".": {
-            "types": "./index.d.ts",
-            "default": "./index.js"
+            "import": {
+                "types": "./dist/index.d.mts",
+                "default": "./dist/index.mjs"
+            },
+            "require": {
+                "types": "./dist/index.d.ts",
+                "default": "./dist/index.js"
+            }
+        },
+        "./enhance": {
+            "import": {
+                "types": "./dist/enhance.d.mts",
+                "default": "./dist/enhance.mjs"
+            },
+            "require": {
+                "types": "./dist/enhance.d.ts",
+                "default": "./dist/enhance.js"
+            }
         },
         "./edge": {
-            "types": "./edge.d.ts",
-            "default": "./edge.js"
+            "import": {
+                "types": "./dist/edge.d.mts",
+                "default": "./dist/edge.mjs"
+            },
+            "require": {
+                "types": "./dist/edge.d.ts",
+                "default": "./dist/edge.js"
+            }
         },
         "./enhancements/node": {
-            "types": "./enhancements/node/index.d.ts",
-            "default": "./enhancements/node/index.js"
+            "import": {
+                "types": "./dist/enhancements/node/index.d.mts",
+                "default": "./dist/enhancements/node/index.mjs"
+            },
+            "require": {
+                "types": "./dist/enhancements/node/index.d.ts",
+                "default": "./dist/enhancements/node/index.js"
+            }
         },
         "./enhancements/edge": {
-            "types": "./enhancements/edge/index.d.ts",
-            "default": "./enhancements/edge/index.js"
+            "import": {
+                "types": "./dist/enhancements/edge/index.d.mts",
+                "default": "./dist/enhancements/edge/index.mjs"
+            },
+            "require": {
+                "types": "./dist/enhancements/edge/index.d.ts",
+                "default": "./dist/enhancements/edge/index.js"
+            }
         },
         "./validation": {
-            "types": "./validation.d.ts",
-            "default": "./validation.js"
-        },
-        "./constraint-solver": {
-            "types": "./constraint-solver.d.ts",
-            "default": "./constraint-solver.js"
+            "import": {
+                "types": "./dist/validation.d.mts",
+                "default": "./dist/validation.mjs"
+            },
+            "require": {
+                "types": "./dist/validation.d.ts",
+                "default": "./dist/validation.js"
+            }
         },
         "./zod": {
-            "types": "./zod/index.d.ts",
-            "default": "./zod/index.js"
+            "import": {
+                "types": "./dist/zod/index.d.mts",
+                "default": "./dist/zod/index.mjs"
+            },
+            "require": {
+                "types": "./dist/zod/index.d.ts",
+                "default": "./dist/zod/index.js"
+            }
         },
         "./zod/input": {
-            "types": "./zod/input.d.ts",
-            "default": "./zod/input.js"
+            "import": {
+                "types": "./dist/zod/input.d.mts",
+                "default": "./dist/zod/input.mjs"
+            },
+            "require": {
+                "types": "./dist/zod/input.d.ts",
+                "default": "./dist/zod/input.js"
+            }
         },
         "./zod/models": {
-            "types": "./zod/models.d.ts",
-            "default": "./zod/models.js"
+            "import": {
+                "types": "./dist/zod/models.d.mts",
+                "default": "./dist/zod/models.mjs"
+            },
+            "require": {
+                "types": "./dist/zod/models.d.ts",
+                "default": "./dist/zod/models.js"
+            }
         },
         "./zod/objects": {
-            "types": "./zod/objects.d.ts",
-            "default": "./zod/objects.js"
+            "import": {
+                "types": "./dist/zod/objects.d.mts",
+                "default": "./dist/zod/objects.mjs"
+            },
+            "require": {
+                "types": "./dist/zod/objects.d.ts",
+                "default": "./dist/zod/objects.js"
+            }
         },
         "./browser": {
-            "types": "./browser/index.d.ts",
-            "import": "./browser/index.mjs",
-            "require": "./browser/index.js",
-            "default": "./browser/index.js"
+            "import": {
+                "types": "./dist/browser/index.d.mts",
+                "default": "./dist/browser/index.mjs"
+            },
+            "require": {
+                "types": "./dist/browser/index.d.ts",
+                "default": "./dist/browser/index.js"
+            }
         },
         "./cross": {
-            "types": "./cross/index.d.ts",
-            "import": "./cross/index.mjs",
-            "require": "./cross/index.js",
-            "default": "./cross/index.js"
+            "import": {
+                "types": "./dist/cross/index.d.mts",
+                "default": "./dist/cross/index.mjs"
+            },
+            "require": {
+                "types": "./dist/cross/index.d.ts",
+                "default": "./dist/cross/index.js"
+            }
         },
         "./model-meta": {
-            "types": "./model-meta.d.ts",
-            "default": "./model-meta.js"
+            "import": {
+                "types": "./dist/model-meta.d.mts",
+                "default": "./dist/model-meta.mjs"
+            },
+            "require": {
+                "types": "./dist/model-meta.d.ts",
+                "default": "./dist/model-meta.js"
+            }
         },
         "./models": {
-            "types": "./models.d.ts"
+            "import": {
+                "types": "./dist/models.d.mts"
+            },
+            "require": {
+                "types": "./dist/models.d.ts"
+            }
         },
         "./zod-utils": {
-            "types": "./zod-utils.d.ts",
-            "default": "./zod-utils.js"
+            "import": {
+                "types": "./dist/zod-utils.d.mts",
+                "default": "./dist/zod-utils.mjs"
+            },
+            "require": {
+                "types": "./dist/zod-utils.d.ts",
+                "default": "./dist/zod-utils.js"
+            }       
         },
-        "./package.json": {
-            "default": "./package.json"
-        }
-    },
-    "publishConfig": {
-        "directory": "dist",
-        "linkDirectory": true
+        "./package.json": "./package.json"
     },
     "dependencies": {
         "bcryptjs": "^2.4.3",

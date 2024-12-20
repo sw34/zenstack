@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { DataModel, isPlugin, isTypeDef, Model, Plugin } from '@zenstackhq/language/ast';
+import { DataModel, isPlugin, isTypeDef, Model, Plugin } from '@zenstackhq/sdk/ast';
 import {
     createProject,
     emitProject,
@@ -25,6 +25,16 @@ import type { Project } from 'ts-morph';
 import { CorePlugins, ensureDefaultOutputFolder } from '../plugins/plugin-utils';
 import telemetry from '../telemetry';
 import { getVersion } from '../utils/version-utils';
+import * as PrismaPlugin from '../plugins/prisma';
+import * as EnhancerPlugin from '../plugins/enhancer';
+import * as ZodPlugin from '../plugins/zod';
+import { CliError } from './cli-error';
+
+const PLUGIN_MODULE_MAP: Record<string, any> = {
+    '@core/prisma': PrismaPlugin,
+    '@core/enhancer': EnhancerPlugin,
+    '@core/zod': ZodPlugin,
+};
 
 type PluginInfo = {
     name: string;
@@ -73,7 +83,7 @@ export class PluginRunner {
             let pluginModule: any;
 
             try {
-                pluginModule = this.loadPluginModule(pluginProvider, runnerOptions.schemaPath);
+                pluginModule = await this.loadPluginModule(pluginProvider, runnerOptions.schemaPath);
             } catch (err) {
                 console.error(`Unable to load plugin module ${pluginProvider}: ${err}`);
                 throw new PluginError('', `Unable to load plugin module ${pluginProvider}`);
@@ -109,7 +119,7 @@ export class PluginRunner {
         }
 
         // calculate all plugins (including core plugins implicitly enabled)
-        const { corePlugins, userPlugins } = this.calculateAllPlugins(runnerOptions, plugins);
+        const { corePlugins, userPlugins } = await this.calculateAllPlugins(runnerOptions, plugins);
         const allPlugins = [...corePlugins, ...userPlugins];
 
         // check dependencies
@@ -196,7 +206,7 @@ export class PluginRunner {
         console.log(`Don't forget to restart your dev server to let the changes take effect.`);
     }
 
-    private calculateAllPlugins(options: PluginRunnerOptions, plugins: PluginInfo[]) {
+    private async calculateAllPlugins(options: PluginRunnerOptions, plugins: PluginInfo[]) {
         const corePlugins: PluginInfo[] = [];
         let zodImplicitlyAdded = false;
 
@@ -206,7 +216,7 @@ export class PluginRunner {
             corePlugins.push(existingPrisma);
             plugins.splice(plugins.indexOf(existingPrisma), 1);
         } else if (options.defaultPlugins) {
-            corePlugins.push(this.makeCorePlugin(CorePlugins.Prisma, options.schemaPath, {}));
+            corePlugins.push(await this.makeCorePlugin(CorePlugins.Prisma, options.schemaPath, {}));
         }
 
         const hasValidation = this.hasValidation(options.schema);
@@ -221,7 +231,7 @@ export class PluginRunner {
         } else {
             if (options.defaultPlugins) {
                 corePlugins.push(
-                    this.makeCorePlugin(CorePlugins.Enhancer, options.schemaPath, {
+                    await this.makeCorePlugin(CorePlugins.Enhancer, options.schemaPath, {
                         // enhancer should load zod schemas if there're validation rules
                         withZodSchemas: hasValidation,
                     })
@@ -245,11 +255,11 @@ export class PluginRunner {
         ) {
             // ensure "@core/zod" is enabled if "@core/enhancer" is enabled and there're validation rules
             zodImplicitlyAdded = true;
-            corePlugins.push(this.makeCorePlugin(CorePlugins.Zod, options.schemaPath, { modelOnly: true }));
+            corePlugins.push(await this.makeCorePlugin(CorePlugins.Zod, options.schemaPath, { modelOnly: true }));
         }
 
         // collect core plugins introduced by dependencies
-        plugins.forEach((plugin) => {
+        for (const plugin of plugins) {
             // TODO: generalize this
             const isTrpcPlugin =
                 plugin.provider === '@zenstackhq/trpc' ||
@@ -286,21 +296,24 @@ export class PluginRunner {
                             depOptions.generateModels = plugin.options.generateModels;
                         }
 
-                        corePlugins.push(this.makeCorePlugin(dep, options.schemaPath, depOptions));
+                        corePlugins.push(await this.makeCorePlugin(dep, options.schemaPath, depOptions));
                     }
                 }
             }
-        });
+        }
 
         return { corePlugins, userPlugins: plugins };
     }
 
-    private makeCorePlugin(
+    private async makeCorePlugin(
         provider: string,
         schemaPath: string,
         options: Record<string, OptionValue | OptionValue[]>
-    ): PluginInfo {
-        const pluginModule = require(this.getPluginModulePath(provider, schemaPath));
+    ): Promise<PluginInfo> {
+        const pluginModule = PLUGIN_MODULE_MAP[provider];
+        if (!pluginModule) {
+            throw new CliError(`Unknown core plugin: ${provider}`);
+        }
         const pluginName = this.getPluginName(pluginModule, provider);
         return {
             name: pluginName,
@@ -410,26 +423,49 @@ export class PluginRunner {
         if (process.env.ZENSTACK_TEST === '1' && provider.startsWith('@zenstackhq/')) {
             // test code runs with its own sandbox of node_modules, make sure we don't
             // accidentally resolve to the external ones
-            return path.resolve(`node_modules/${provider}`);
+            const esm = typeof import.meta !== 'undefined';
+            return path.resolve(`node_modules/${provider}${esm ? '/dist/index.mjs' : '/dist/index.js'}`);
         }
-        let pluginModulePath = provider;
-        if (provider.startsWith('@core/')) {
-            pluginModulePath = provider.replace(/^@core/, path.join(__dirname, '../plugins'));
-        } else {
-            try {
-                // direct require
-                require.resolve(pluginModulePath);
-            } catch {
-                // relative
-                pluginModulePath = resolvePath(provider, { schemaPath });
-            }
+
+        // let pluginModulePath = provider;
+        // if (provider.startsWith('@core/')) {
+        //     // const __filename = fileURLToPath(import.meta.url);
+        //     // const __dirname = path.dirname(__filename);
+        //     pluginModulePath = provider.replace(/^@core/, '/plugins');
+        // } else {
+
+        if (path.isAbsolute(provider)) {
+            return provider;
         }
-        return pluginModulePath;
+
+        if (provider.startsWith('./') || provider.startsWith('../')) {
+            // relative path
+            return resolvePath(provider, { schemaPath });
+        }
+
+        return provider;
+
+        // try {
+        //     // direct require
+        //     require.resolve(pluginModulePath);
+        // } catch {
+        //     // relative
+        //     pluginModulePath = resolvePath(provider, { schemaPath });
+        // }
+        // // }
+        // return pluginModulePath;
     }
 
-    private loadPluginModule(provider: string, schemaPath: string) {
+    private async loadPluginModule(provider: string, schemaPath: string) {
+        if (provider.startsWith('@core/')) {
+            const pluginModule = PLUGIN_MODULE_MAP[provider];
+            if (!pluginModule) {
+                throw new PluginError('', `Plugin ${provider} is not available`);
+            }
+            return pluginModule;
+        }
         const pluginModulePath = this.getPluginModulePath(provider, schemaPath);
-        return require(pluginModulePath);
+        return import(pluginModulePath);
     }
 }
 

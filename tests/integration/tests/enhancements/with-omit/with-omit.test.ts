@@ -95,7 +95,7 @@ describe('Omit test', () => {
         expect(r.password).toBeUndefined();
         expect(r.profile.image).toBeUndefined();
 
-        const db1 = enhance(prisma, { modelMeta: require(path.resolve('./zen/model-meta')).default });
+        const db1 = enhance(prisma, { modelMeta: (await import(path.resolve('./zen/model-meta'))).default });
         const r1 = await db1.user.create({
             include: { profile: true },
             data: {

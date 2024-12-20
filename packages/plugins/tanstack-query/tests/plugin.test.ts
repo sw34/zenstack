@@ -1,9 +1,11 @@
 /// <reference types="@types/jest" />
 
-import { loadSchema, normalizePath } from '@zenstackhq/testtools';
+import { loadSchema } from '@zenstackhq/testtools';
 import fs from 'fs';
 import path from 'path';
 import tmp from 'tmp';
+
+tmp.setGracefulCleanup();
 
 describe('Tanstack Query Plugin Tests', () => {
     let origDir: string;
@@ -82,7 +84,7 @@ model Foo {
         await loadSchema(
             `
 plugin tanstack {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '@zenstackhq/tanstack-query'
     output = '$projectRoot/hooks'
     target = 'react'
     version = 'v4'
@@ -94,7 +96,6 @@ ${sharedModel}
                 provider: 'postgresql',
                 pushDb: false,
                 extraDependencies: ['react@18.2.0', '@types/react@18.2.0', '@tanstack/react-query@4.29.7'],
-                copyDependencies: [path.resolve(__dirname, '../dist')],
                 compile: true,
                 extraSourceFiles: [reactAppSource],
             }
@@ -105,7 +106,7 @@ ${sharedModel}
         await loadSchema(
             `
 plugin tanstack {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '@zenstackhq/tanstack-query'
     output = '$projectRoot/hooks'
     target = 'react'
 }
@@ -116,7 +117,6 @@ ${sharedModel}
                 provider: 'postgresql',
                 pushDb: false,
                 extraDependencies: ['react@18.2.0', '@types/react@18.2.0', '@tanstack/react-query@5.56.x'],
-                copyDependencies: [path.resolve(__dirname, '../dist')],
                 compile: true,
                 extraSourceFiles: [
                     reactAppSource,
@@ -174,7 +174,7 @@ ${sharedModel}
         await loadSchema(
             `
 plugin tanstack {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '@zenstackhq/tanstack-query'
     output = '$projectRoot/hooks'
     target = 'vue'
     version = 'v4'
@@ -186,7 +186,6 @@ ${sharedModel}
                 provider: 'postgresql',
                 pushDb: false,
                 extraDependencies: ['vue@^3.3.4', '@tanstack/vue-query@4.37.0'],
-                copyDependencies: [path.resolve(__dirname, '../dist')],
                 compile: true,
                 extraSourceFiles: [vueAppSource],
             }
@@ -197,7 +196,7 @@ ${sharedModel}
         await loadSchema(
             `
 plugin tanstack {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '@zenstackhq/tanstack-query'
     output = '$projectRoot/hooks'
     target = 'vue'
 }
@@ -208,7 +207,6 @@ ${sharedModel}
                 provider: 'postgresql',
                 pushDb: false,
                 extraDependencies: ['vue@^3.3.4', '@tanstack/vue-query@latest'],
-                copyDependencies: [path.resolve(__dirname, '../dist')],
                 compile: true,
                 extraSourceFiles: [vueAppSource],
             }
@@ -250,7 +248,7 @@ ${sharedModel}
         await loadSchema(
             `
 plugin tanstack {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '@zenstackhq/tanstack-query'
     output = '$projectRoot/hooks'
     target = 'svelte'
     version = 'v4'
@@ -262,7 +260,6 @@ ${sharedModel}
                 provider: 'postgresql',
                 pushDb: false,
                 extraDependencies: ['svelte@^3.0.0', '@tanstack/svelte-query@4.29.7'],
-                copyDependencies: [path.resolve(__dirname, '../dist')],
                 compile: true,
                 extraSourceFiles: [svelteAppSource],
             }
@@ -273,7 +270,7 @@ ${sharedModel}
         await loadSchema(
             `
 plugin tanstack {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '@zenstackhq/tanstack-query'
     output = '$projectRoot/hooks'
     target = 'svelte'
 }
@@ -284,7 +281,6 @@ ${sharedModel}
                 provider: 'postgresql',
                 pushDb: false,
                 extraDependencies: ['svelte@^3.0.0', '@tanstack/svelte-query@^5.0.0'],
-                copyDependencies: [path.resolve(__dirname, '../dist')],
                 compile: true,
                 extraSourceFiles: [svelteAppSource],
             }
@@ -299,7 +295,7 @@ ${sharedModel}
         await loadSchema(
             `
         plugin tanstack {
-            provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+            provider = '@zenstackhq/tanstack-query'
             output = '$projectRoot/tanstack'
             target = 'react'
         }
@@ -315,7 +311,6 @@ ${sharedModel}
             {
                 pushDb: false,
                 projectDir,
-                extraDependencies: [`${normalizePath(path.join(__dirname, '../dist'))}`],
             }
         );
 
@@ -330,7 +325,7 @@ ${sharedModel}
             loadSchema(
                 `
         plugin tanstack {
-            provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+            provider = '@zenstackhq/tanstack-query'
             output = '$projectRoot/tanstack'
             target = 'react'
         }
@@ -343,7 +338,7 @@ ${sharedModel}
             password String @omit
         }        
         `,
-                { pushDb: false, projectDir, extraDependencies: [`${normalizePath(path.join(__dirname, '../dist'))}`] }
+                { pushDb: false, projectDir }
             )
         ).rejects.toThrow('already exists and is not a directory');
     });

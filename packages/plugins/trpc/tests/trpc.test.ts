@@ -1,6 +1,6 @@
 /// <reference types="@types/jest" />
 
-import { loadSchema, normalizePath } from '@zenstackhq/testtools';
+import { loadSchema } from '@zenstackhq/testtools';
 import fs from 'fs';
 import path from 'path';
 import tmp from 'tmp';
@@ -20,7 +20,7 @@ describe('tRPC Plugin Tests', () => {
         await loadSchema(
             `
 plugin trpc {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '@zenstackhq/trpc'
     output = '$projectRoot/trpc'
 }
 
@@ -57,7 +57,7 @@ model Foo {
             {
                 provider: 'postgresql',
                 pushDb: false,
-                extraDependencies: [path.resolve(__dirname, '../dist'), '@trpc/client', '@trpc/server'],
+                extraDependencies: ['@trpc/client', '@trpc/server'],
                 compile: true,
                 fullZod: true,
             }
@@ -68,7 +68,7 @@ model Foo {
         const { projectDir } = await loadSchema(
             `
 plugin trpc {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '@zenstackhq/trpc'
     output = './trpc'
 }
 
@@ -99,7 +99,7 @@ model Foo {
         `,
             {
                 pushDb: false,
-                extraDependencies: [path.resolve(__dirname, '../dist'), '@trpc/client', '@trpc/server'],
+                extraDependencies: ['@trpc/client', '@trpc/server'],
                 compile: true,
                 fullZod: true,
             }
@@ -111,7 +111,7 @@ model Foo {
         const { projectDir } = await loadSchema(
             `
 plugin trpc {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '@zenstackhq/trpc'
     output = './trpc'
 }
 
@@ -129,7 +129,7 @@ model Post {
         `,
             {
                 pushDb: false,
-                extraDependencies: [path.resolve(__dirname, '../dist'), '@trpc/client', '@trpc/server'],
+                extraDependencies: ['@trpc/client', '@trpc/server'],
                 compile: true,
                 fullZod: true,
                 customSchemaFilePath: 'zenstack/schema.zmodel',
@@ -142,7 +142,7 @@ model Post {
         const { projectDir } = await loadSchema(
             `
 plugin trpc {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '@zenstackhq/trpc'
     output = './trpc'
     generateModelActions = 'findMany,findUnique,update'
 }
@@ -154,7 +154,7 @@ model Post {
         `,
             {
                 pushDb: false,
-                extraDependencies: [path.resolve(__dirname, '../dist'), '@trpc/client', '@trpc/server'],
+                extraDependencies: ['@trpc/client', '@trpc/server'],
                 compile: true,
                 fullZod: true,
                 customSchemaFilePath: 'zenstack/schema.zmodel',
@@ -172,7 +172,7 @@ model Post {
         const { projectDir } = await loadSchema(
             `
 plugin trpc {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '@zenstackhq/trpc'
     output = './trpc'
     generateModelActions = ['findMany', 'findUnique', 'update']
 }
@@ -184,7 +184,7 @@ model Post {
         `,
             {
                 pushDb: false,
-                extraDependencies: [path.resolve(__dirname, '../dist'), '@trpc/client', '@trpc/server'],
+                extraDependencies: ['@trpc/client', '@trpc/server'],
                 compile: true,
                 fullZod: true,
                 customSchemaFilePath: 'zenstack/schema.zmodel',
@@ -221,7 +221,7 @@ model Post {
         await loadSchema(
             `
             plugin trpc {
-                provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+                provider = '@zenstackhq/trpc'
                 output = '$projectRoot/trpc'
                 generateClientHelpers = 'react'
             }
@@ -230,12 +230,7 @@ model Post {
             `,
             {
                 pushDb: false,
-                extraDependencies: [
-                    path.resolve(__dirname, '../dist'),
-                    '@trpc/client',
-                    '@trpc/server',
-                    '@trpc/react-query',
-                ],
+                extraDependencies: ['@trpc/client', '@trpc/server', '@trpc/react-query'],
                 compile: true,
                 fullZod: true,
             }
@@ -246,7 +241,7 @@ model Post {
         await loadSchema(
             `
             plugin trpc {
-                provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+                provider = '@zenstackhq/trpc'
                 output = '$projectRoot/trpc'
                 generateClientHelpers = 'next'
             }
@@ -255,7 +250,7 @@ model Post {
             `,
             {
                 pushDb: false,
-                extraDependencies: [path.resolve(__dirname, '../dist'), '@trpc/client', '@trpc/server', '@trpc/next'],
+                extraDependencies: ['@trpc/client', '@trpc/server', '@trpc/next'],
                 compile: true,
                 fullZod: true,
             }
@@ -266,7 +261,7 @@ model Post {
         await loadSchema(
             `
 plugin trpc {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '@zenstackhq/trpc'
     output = '$projectRoot/trpc'
 }
 
@@ -285,7 +280,7 @@ model post_item {
         `,
             {
                 pushDb: false,
-                extraDependencies: [path.resolve(__dirname, '../dist'), '@trpc/client', '@trpc/server'],
+                extraDependencies: ['@trpc/client', '@trpc/server'],
                 compile: true,
                 fullZod: true,
             }
@@ -305,7 +300,7 @@ generator js {
 }
         
 plugin trpc {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '@zenstackhq/trpc'
     output = '$projectRoot/trpc'
     generateModels = ['Post']
     generateModelActions = ['findMany', 'update']
@@ -332,7 +327,7 @@ model Foo {
             {
                 addPrelude: false,
                 pushDb: false,
-                extraDependencies: [path.resolve(__dirname, '../dist'), '@trpc/client', '@trpc/server'],
+                extraDependencies: ['@trpc/client', '@trpc/server'],
                 compile: true,
             }
         );
@@ -376,7 +371,7 @@ plugin zod {
 }
                     
 plugin trpc {
-    provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+    provider = '@zenstackhq/trpc'
     output = '$projectRoot/trpc'
     generateModels = ['Post']
     generateModelActions = ['findMany', 'update']
@@ -403,7 +398,7 @@ model Foo {
             {
                 addPrelude: false,
                 pushDb: false,
-                extraDependencies: [path.resolve(__dirname, '../dist'), '@trpc/client', '@trpc/server'],
+                extraDependencies: ['@trpc/client', '@trpc/server'],
                 compile: true,
             }
         );
@@ -429,7 +424,7 @@ model Foo {
         await loadSchema(
             `
         plugin trpc {
-            provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+            provider = '@zenstackhq/trpc'
             output = '$projectRoot/trpc'
         }
     
@@ -444,7 +439,6 @@ model Foo {
             {
                 pushDb: false,
                 projectDir,
-                extraDependencies: [`${normalizePath(path.join(__dirname, '../dist'))}`],
             }
         );
 
@@ -459,7 +453,7 @@ model Foo {
             loadSchema(
                 `
         plugin trpc {
-            provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+            provider = '@zenstackhq/trpc'
             output = '$projectRoot/trpc'
         }
     
@@ -471,7 +465,7 @@ model Foo {
             password String @omit
         }        
         `,
-                { pushDb: false, projectDir, extraDependencies: [`${normalizePath(path.join(__dirname, '../dist'))}`] }
+                { pushDb: false, projectDir }
             )
         ).rejects.toThrow('already exists and is not a directory');
     });

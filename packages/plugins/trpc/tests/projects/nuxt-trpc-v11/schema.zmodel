@@ -13,7 +13,7 @@ generator client {
 }
 
 plugin trpc {
-    provider = "../../../dist"
+    provider = "@zenstackhq/trpc"
     version = "v11"
     importCreateRouter = "../../generated-router-helper"
     importProcedure = "../../generated-router-helper"

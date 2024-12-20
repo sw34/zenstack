@@ -1,4 +1,4 @@
-import { Attribute } from '@zenstackhq/language/ast';
+import { Attribute } from '@zenstackhq/sdk/ast';
 import { ValidationAcceptor } from 'langium';
 import { AstValidator } from '../types';
 import { validateAttributeApplication } from './attribute-application-validator';

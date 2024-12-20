@@ -1,4 +1,12 @@
-import { CompilerOptions, DiagnosticCategory, ModuleKind, Project, ScriptTarget, SourceFile } from 'ts-morph';
+import {
+    CompilerOptions,
+    DiagnosticCategory,
+    ModuleKind,
+    ModuleResolutionKind,
+    Project,
+    ScriptTarget,
+    SourceFile,
+} from 'ts-morph';
 import { PluginError } from './types';
 
 /**
@@ -7,8 +15,9 @@ import { PluginError } from './types';
 export function createProject(options?: CompilerOptions) {
     return new Project({
         compilerOptions: {
-            target: ScriptTarget.ES2016,
-            module: ModuleKind.CommonJS,
+            target: ScriptTarget.ESNext,
+            module: ModuleKind.ESNext,
+            moduleResolution: ModuleResolutionKind.NodeNext,
             esModuleInterop: true,
             declaration: true,
             strict: true,

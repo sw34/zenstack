@@ -1,10 +1,13 @@
-import baseConfig from '../../jest.config';
+import { createDefaultEsmPreset, type JestConfigWithTsJest } from 'ts-jest';
 
-/*
- * For a detailed explanation regarding each configuration property and type check, visit:
- * https://jestjs.io/docs/configuration
- */
-export default {
-    ...baseConfig,
+const presetConfig = createDefaultEsmPreset({
+    isolatedModules: true,
+});
+
+const jestConfig: JestConfigWithTsJest = {
+    ...presetConfig,
     setupFilesAfterEnv: ['./test-setup.ts'],
+    testTimeout: 300000,
 };
+
+export default jestConfig;

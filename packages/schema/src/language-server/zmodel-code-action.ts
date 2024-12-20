@@ -1,4 +1,4 @@
-import { DataModel, DataModelField, Model, isDataModel } from '@zenstackhq/language/ast';
+import { DataModel, DataModelField, Model, isDataModel } from '@zenstackhq/sdk/ast';
 import {
     AstReflection,
     CodeActionProvider,

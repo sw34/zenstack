@@ -25,12 +25,27 @@ export function withPassword<DbClient extends object = any>(
 }
 
 // `bcryptjs.hash` is good for performance but it doesn't work in vercel edge runtime,
-// so we fall back to `bcrypt.hash` in that case.
+// so we fall back to `bcryptjs.hashSync` in that case.
 
 // eslint-disable-next-line no-var
 declare var EdgeRuntime: any;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const hashFunc = typeof EdgeRuntime === 'string' ? require('bcryptjs').hashSync : require('bcryptjs').hash;
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+let hashFunc: Function | undefined;
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+async function getHashFunc() {
+    if (!hashFunc) {
+        hashFunc =
+            typeof EdgeRuntime === 'string'
+                ? (await import('bcryptjs')).default.hashSync
+                : (await import('bcryptjs')).default.hash;
+    }
+    return hashFunc;
+}
+
+// // eslint-disable-next-line @typescript-eslint/no-var-requires
+// const hashFunc = typeof EdgeRuntime === 'string' ? require('bcryptjs').hashSync : require('bcryptjs').hash;
 
 class PasswordHandler extends DefaultPrismaProxyHandler {
     constructor(prisma: DbClientContract, model: string, options: InternalEnhancementOptions) {
@@ -60,6 +75,7 @@ class PasswordHandler extends DefaultPrismaProxyHandler {
                     if (!salt) {
                         salt = DEFAULT_PASSWORD_SALT_LENGTH;
                     }
+                    const hashFunc = await getHashFunc();
                     context.parent[field.name] = await hashFunc(data, salt);
                 }
             },

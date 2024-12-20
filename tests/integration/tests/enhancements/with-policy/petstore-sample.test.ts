@@ -1,14 +1,16 @@
-import { AuthUser } from '@zenstackhq/runtime';
+import type { AuthUser } from '@zenstackhq/runtime';
 import { loadSchemaFromFile, run, type FullDbClientContract } from '@zenstackhq/testtools';
+import { fileURLToPath } from 'node:url';
 import path from 'path';
 
 describe('Pet Store Policy Tests', () => {
     let getDb: (user?: AuthUser) => FullDbClientContract;
     let prisma: FullDbClientContract;
+    const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
     beforeAll(async () => {
         const { enhance, prisma: _prisma } = await loadSchemaFromFile(
-            path.join(__dirname, '../../schema/petstore.zmodel'),
+            path.join(_dirname, '../../schema/petstore.zmodel'),
             { addPrelude: false }
         );
         getDb = enhance;

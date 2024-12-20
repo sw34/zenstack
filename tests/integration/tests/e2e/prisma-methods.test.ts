@@ -1,4 +1,4 @@
-import { AuthUser } from '@zenstackhq/runtime';
+import { type AuthUser } from '@zenstackhq/runtime';
 import { FullDbClientContract, loadSchema, run } from '@zenstackhq/testtools';
 
 describe('Prisma Methods Tests', () => {

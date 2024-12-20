@@ -1,4 +1,4 @@
-import { TypeDef, TypeDefField } from '@zenstackhq/language/ast';
+import { TypeDef, TypeDefField } from '@zenstackhq/sdk/ast';
 import { ValidationAcceptor } from 'langium';
 import { AstValidator } from '../types';
 import { validateAttributeApplication } from './attribute-application-validator';

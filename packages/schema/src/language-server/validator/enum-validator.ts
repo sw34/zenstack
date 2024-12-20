@@ -1,4 +1,4 @@
-import { Enum, EnumField } from '@zenstackhq/language/ast';
+import { Enum, EnumField } from '@zenstackhq/sdk/ast';
 import { ValidationAcceptor } from 'langium';
 import { AstValidator } from '../types';
 import { validateAttributeApplication } from './attribute-application-validator';

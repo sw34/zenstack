@@ -1,15 +1,16 @@
 /// <reference types="@types/jest" />
 
-import { loadSchema, normalizePath } from '@zenstackhq/testtools';
-import path from 'path';
+import { loadSchema } from '@zenstackhq/testtools';
 import tmp from 'tmp';
+
+tmp.setGracefulCleanup();
 
 describe('Tanstack Query Plugin Portable Tests', () => {
     it('supports portable for standard prisma client', async () => {
         await loadSchema(
             `
         plugin tanstack {
-            provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+            provider = '@zenstackhq/tanstack-query'
             output = '$projectRoot/hooks'
             target = 'react'
             portable = true
@@ -32,7 +33,6 @@ describe('Tanstack Query Plugin Portable Tests', () => {
                 provider: 'postgresql',
                 pushDb: false,
                 extraDependencies: ['react@18.2.0', '@types/react@18.2.0', '@tanstack/react-query@5.56.x'],
-                copyDependencies: [path.resolve(__dirname, '../dist')],
                 compile: true,
                 extraSourceFiles: [
                     {
@@ -66,7 +66,7 @@ console.log(data?.posts[0].title);
         }
 
         plugin tanstack {
-            provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+            provider = '@zenstackhq/tanstack-query'
             output = '$projectRoot/hooks'
             target = 'react'
             portable = true
@@ -89,7 +89,6 @@ console.log(data?.posts[0].title);
                 provider: 'postgresql',
                 pushDb: false,
                 extraDependencies: ['react@18.2.0', '@types/react@18.2.0', '@tanstack/react-query@5.56.x'],
-                copyDependencies: [path.resolve(__dirname, '../dist')],
                 compile: true,
                 addPrelude: false,
                 projectDir,
@@ -113,7 +112,7 @@ console.log(data?.posts[0].title);
         await loadSchema(
             `
         plugin tanstack {
-            provider = '${normalizePath(path.resolve(__dirname, '../dist'))}'
+            provider = '@zenstackhq/tanstack-query'
             output = '$projectRoot/hooks'
             target = 'react'
             portable = true
@@ -134,7 +133,6 @@ console.log(data?.posts[0].title);
                 provider: 'postgresql',
                 pushDb: false,
                 extraDependencies: ['react@18.2.0', '@types/react@18.2.0', '@tanstack/react-query@5.56.x'],
-                copyDependencies: [path.resolve(__dirname, '../dist')],
                 compile: true,
                 extraSourceFiles: [
                     {

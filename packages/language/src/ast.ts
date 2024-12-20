@@ -37,38 +37,38 @@ export const BinaryExprOperatorPriority: Record<BinaryExpr['operator'], number> 
     '!': 5,
 };
 
-declare module './generated/ast' {
-    interface AttributeArg {
-        /**
-         * Resolved attribute param declaration
-         */
-        $resolvedParam?: AttributeParam;
-    }
+// declare module './generated/ast' {
+//     interface AttributeArg {
+//         /**
+//          * Resolved attribute param declaration
+//          */
+//         $resolvedParam?: AttributeParam;
+//     }
 
-    interface DataModelField {
-        $inheritedFrom?: DataModel;
-    }
+//     interface DataModelField {
+//         $inheritedFrom?: DataModel;
+//     }
 
-    interface DataModelAttribute {
-        $inheritedFrom?: DataModel;
-    }
+//     interface DataModelAttribute {
+//         $inheritedFrom?: DataModel;
+//     }
 
-    export interface DataModel {
-        /**
-         * Indicates whether the model is already merged with the base types
-         */
-        $baseMerged?: boolean;
+//     export interface DataModel {
+//         /**
+//          * Indicates whether the model is already merged with the base types
+//          */
+//         $baseMerged?: boolean;
 
-        /**
-         * All fields including those marked with `@ignore`
-         */
-        $allFields?: DataModelField[];
-    }
-}
+//         /**
+//          * All fields including those marked with `@ignore`
+//          */
+//         $allFields?: DataModelField[];
+//     }
+// }
 
-export interface InheritableNode extends AstNode {
-    $inheritedFrom?: DataModel;
-}
+// export interface InheritableNode extends AstNode {
+//     $inheritedFrom?: DataModel;
+// }
 
 export interface InheritableNode extends AstNode {
     $inheritedFrom?: DataModel;

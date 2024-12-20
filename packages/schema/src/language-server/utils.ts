@@ -1,3 +1,4 @@
+import { resolved } from '@zenstackhq/sdk';
 import {
     isArrayExpr,
     isDataModel,
@@ -7,8 +8,7 @@ import {
     type DataModel,
     type DataModelField,
     type ReferenceExpr,
-} from '@zenstackhq/language/ast';
-import { resolved } from '@zenstackhq/sdk';
+} from '@zenstackhq/sdk/ast';
 
 /**
  * Gets lists of unique fields declared at the data model level

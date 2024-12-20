@@ -1,5 +1,5 @@
 import { loadSchema } from '@zenstackhq/testtools';
-import { compareSync } from 'bcryptjs';
+import bcryptjs from 'bcryptjs';
 import path from 'path';
 
 describe('Password test', () => {
@@ -29,7 +29,7 @@ describe('Password test', () => {
                 password: 'abc123',
             },
         });
-        expect(compareSync('abc123', r.password)).toBeTruthy();
+        expect(bcryptjs.compareSync('abc123', r.password)).toBeTruthy();
 
         const r1 = await db.user.update({
             where: { id: '1' },
@@ -37,7 +37,7 @@ describe('Password test', () => {
                 password: 'abc456',
             },
         });
-        expect(compareSync('abc456', r1.password)).toBeTruthy();
+        expect(bcryptjs.compareSync('abc456', r1.password)).toBeTruthy();
     });
 
     it('length tests', async () => {
@@ -56,7 +56,7 @@ describe('Password test', () => {
                 password: 'abc123',
             },
         });
-        expect(compareSync('abc123', r.password)).toBeTruthy();
+        expect(bcryptjs.compareSync('abc123', r.password)).toBeTruthy();
 
         r = await db.user.update({
             where: { id: '1' },
@@ -64,7 +64,7 @@ describe('Password test', () => {
                 password: 'abc456',
             },
         });
-        expect(compareSync('abc456', r.password)).toBeTruthy();
+        expect(bcryptjs.compareSync('abc456', r.password)).toBeTruthy();
 
         await expect(
             db.user.update({

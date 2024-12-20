@@ -2,6 +2,8 @@
     "extends": "../../../tsconfig.base.json",
     "compilerOptions": {
         "lib": ["ESNext", "DOM"],
+        "module": "Preserve",
+        "moduleResolution": "bundler",
         "outDir": "dist",
         "jsx": "react"
     },

@@ -12,7 +12,7 @@ import {
     isReferenceExpr,
     isThisExpr,
     isTypeDef,
-} from '@zenstackhq/language/ast';
+} from '@zenstackhq/sdk/ast';
 import { PolicyCrudKind, type PolicyOperationKind } from '@zenstackhq/runtime';
 import {
     ExpressionContext,

@@ -7,7 +7,7 @@ import {
     isEnum,
     isStringLiteral,
     isTypeDef,
-} from '@zenstackhq/language/ast';
+} from '@zenstackhq/sdk/ast';
 import {
     getModelFieldsWithBases,
     getModelIdFields,

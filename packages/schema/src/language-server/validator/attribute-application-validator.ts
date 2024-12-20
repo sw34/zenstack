@@ -16,7 +16,7 @@ import {
     isReferenceExpr,
     isTypeDef,
     isTypeDefField,
-} from '@zenstackhq/language/ast';
+} from '@zenstackhq/sdk/ast';
 import {
     hasAttribute,
     isDataModelFieldReference,

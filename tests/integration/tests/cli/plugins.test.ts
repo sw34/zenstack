@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 /// <reference types="@types/jest" />
 
 import { getWorkspaceNpmCacheFolder, installPackage, run } from '@zenstackhq/testtools';
 import * as fs from 'fs';
+import { fileURLToPath } from 'node:url';
 import * as path from 'path';
 import * as tmp from 'tmp';
-import { createProgram } from '../../../../packages/schema/src/cli';
+import { createProgram } from 'zenstack/cli';
 
 tmp.setGracefulCleanup();
 
@@ -20,8 +20,10 @@ describe('CLI Plugins Tests', () => {
         process.chdir(origDir);
     });
 
+    const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+
     function createNpmrc() {
-        fs.writeFileSync('.npmrc', `cache=${getWorkspaceNpmCacheFolder(__dirname)}`);
+        fs.writeFileSync('.npmrc', `cache=${getWorkspaceNpmCacheFolder(_dirname)}`);
     }
 
     const PACKAGE_MANAGERS = ['npm' /*, 'pnpm', 'pnpm-workspace'*/] as const;
@@ -68,7 +70,11 @@ describe('CLI Plugins Tests', () => {
         // }
 
         // deps
-        const ver = require('../../../../packages/schema/package.json').version;
+
+        const pkgJson = JSON.parse(
+            fs.readFileSync(path.resolve(_dirname, '../../../../packages/schema/package.json'), 'utf-8')
+        );
+        const ver = pkgJson.version;
         const depPkgs = [
             'zod@3.21.1',
             'react',
@@ -76,9 +82,9 @@ describe('CLI Plugins Tests', () => {
             '@tanstack/react-query@5.56.x',
             '@trpc/server',
             '@prisma/client@6.0.x',
-            `${path.join(__dirname, '../../../../.build/zenstackhq-language-' + ver + '.tgz')}`,
-            `${path.join(__dirname, '../../../../.build/zenstackhq-sdk-' + ver + '.tgz')}`,
-            `${path.join(__dirname, '../../../../.build/zenstackhq-runtime-' + ver + '.tgz')}`,
+            `${path.join(_dirname, '../../../../.build/zenstackhq-language-' + ver + '.tgz')}`,
+            `${path.join(_dirname, '../../../../.build/zenstackhq-sdk-' + ver + '.tgz')}`,
+            `${path.join(_dirname, '../../../../.build/zenstackhq-runtime-' + ver + '.tgz')}`,
         ];
         const deps = depPkgs.join(' ');
 
@@ -86,11 +92,11 @@ describe('CLI Plugins Tests', () => {
             'typescript',
             '@types/react',
             'prisma@6.0.x',
-            `${path.join(__dirname, '../../../../.build/zenstack-' + ver + '.tgz')}`,
-            `${path.join(__dirname, '../../../../.build/zenstackhq-tanstack-query-' + ver + '.tgz')}`,
-            `${path.join(__dirname, '../../../../.build/zenstackhq-swr-' + ver + '.tgz')}`,
-            `${path.join(__dirname, '../../../../.build/zenstackhq-trpc-' + ver + '.tgz')}`,
-            `${path.join(__dirname, '../../../../.build/zenstackhq-openapi-' + ver + '.tgz')}`,
+            `${path.join(_dirname, '../../../../.build/zenstack-' + ver + '.tgz')}`,
+            `${path.join(_dirname, '../../../../.build/zenstackhq-tanstack-query-' + ver + '.tgz')}`,
+            `${path.join(_dirname, '../../../../.build/zenstackhq-swr-' + ver + '.tgz')}`,
+            `${path.join(_dirname, '../../../../.build/zenstackhq-trpc-' + ver + '.tgz')}`,
+            `${path.join(_dirname, '../../../../.build/zenstackhq-openapi-' + ver + '.tgz')}`,
         ];
         const devDeps = devDepPkgs.join(' ');
 

@@ -15,7 +15,7 @@ describe('Password test', () => {
             { getPrismaOnly: true, output: './zen' }
         );
 
-        const enhance = require(path.join(projectDir, 'zen/enhance')).enhance;
+        const enhance = (await import(path.join(projectDir, 'zen/enhance'))).enhance;
         const db = enhance(prisma);
         await expect(
             db.foo.create({
@@ -41,10 +41,10 @@ describe('Password test', () => {
             { getPrismaOnly: true, output: './zen' }
         );
 
-        const enhance = require(path.join(projectDir, 'zen/enhance')).enhance;
+        const enhance = (await import(path.join(projectDir, 'zen/enhance'))).enhance;
         const db = enhance(prisma, {
-            modelMeta: require(path.join(projectDir, 'zen/model-meta')).default,
-            policy: require(path.resolve(projectDir, 'zen/policy')).default,
+            modelMeta: (await import(path.join(projectDir, 'zen/model-meta'))).default,
+            policy: (await import(path.resolve(projectDir, 'zen/policy'))).default,
         });
         await expect(
             db.foo.create({

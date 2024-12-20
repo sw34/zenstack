@@ -20,11 +20,16 @@
     "@trpc/next": "^10.43.6",
     "@trpc/react-query": "^10.43.6",
     "@trpc/server": "^10.43.6",
+    "@zenstackhq/language": "file:../../../../../../.build/zenstackhq-language-2.10.1.tgz",
+    "@zenstackhq/runtime": "file:../../../../../../.build/zenstackhq-runtime-2.10.1.tgz",
+    "@zenstackhq/sdk": "file:../../../../../../.build/zenstackhq-sdk-2.10.1.tgz",
+    "@zenstackhq/trpc": "file:../../../",
     "next": "^14.0.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "superjson": "^2.2.1",
-    "zod": "^3.22.4"        
+    "zenstack": "file:../../../../../../.build/zenstack-2.10.1.tgz",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/eslint": "^8.44.7",

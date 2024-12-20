@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import PG from 'pg';
 
 const USERNAME = process.env.ZENSTACK_TEST_DB_USER || 'postgres';
 const PASSWORD = process.env.ZENSTACK_TEST_DB_PASS || 'abc123';
@@ -7,12 +7,12 @@ const HOST = process.env.ZENSTACK_TEST_DB_HOST || 'localhost';
 const PORT = (process.env.ZENSTACK_TEST_DB_PORT ? parseInt(process.env.ZENSTACK_TEST_DB_PORT) : null) || 5432;
 
 function connect() {
-    return new Pool({ 
-        user: USERNAME, 
-        password: PASSWORD, 
+    return new PG.Pool({
+        user: USERNAME,
+        password: PASSWORD,
         database: CONNECTION_DB,
         host: HOST,
-        port: PORT
+        port: PORT,
     });
 }
 

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { getInheritanceChain, getRecursiveBases, isDelegateModel, isFromStdlib } from '@zenstackhq/sdk';
 import {
     BinaryExpr,
     DataModel,
@@ -13,8 +15,7 @@ import {
     Model,
     ModelImport,
     TypeDef,
-} from '@zenstackhq/language/ast';
-import { getInheritanceChain, getRecursiveBases, isDelegateModel, isFromStdlib } from '@zenstackhq/sdk';
+} from '@zenstackhq/sdk/ast';
 import {
     AstNode,
     copyAstNode,
@@ -53,7 +54,7 @@ export function mergeBaseModels(model: Model, linker: Linker) {
             dataModel.fields = bases
                 .flatMap((base) => base.fields)
                 // don't inherit skip-level fields
-                .filter((f) => !f.$inheritedFrom)
+                .filter((f) => !(f as any).$inheritedFrom)
                 .map((f) => cloneAst(f, dataModel, buildReference))
                 .concat(dataModel.fields);
 
@@ -64,7 +65,7 @@ export function mergeBaseModels(model: Model, linker: Linker) {
         }
 
         // mark base merged
-        dataModel.$baseMerged = true;
+        (dataModel as any).$baseMerged = true;
     });
 
     // remove abstract models
